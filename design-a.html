@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Design a ___ — A.I. FOR DESIGNERS</title>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --paper: #f7f3eb;
+      --ink: #171717;
+      --pink: #d47b95;
+      --pink-light: #e7b6c5;
+      --line: #dec8d1;
+      --muted: #555555;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--paper);
+      background-image: radial-gradient(rgba(0, 0, 0, 0.08) 0.7px, transparent 0.7px);
+      background-size: 10px 10px;
+      font-family: 'Inter', sans-serif;
+      color: var(--ink);
+      padding: 24px 16px;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    .frame {
+      position: fixed;
+      inset: 8px;
+      border: 2px solid rgba(231, 182, 197, 0.45);
+      pointer-events: none;
+      z-index: 10;
+    }
+    .frame::before,
+    .frame::after {
+      content: '❀ ✦ ❀';
+      position: absolute;
+      color: var(--pink);
+      font-size: 0.85rem;
+    }
+    .frame::before { top: 8px; left: 8px; }
+    .frame::after { bottom: 8px; right: 8px; }
+
+    .wrapper {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: calc(100vh - 48px);
+      width: 100%;
+    }
+
+    .panel {
+      width: 100%;
+      max-width: 620px;
+      margin: 40px auto;
+      padding: 36px 28px;
+      border: 3px solid var(--ink);
+      background: var(--paper);
+      position: relative;
+      z-index: 2;
+      box-shadow: 6px 6px 0px rgba(23, 23, 23, 0.05);
+    }
+
+    .stamp {
+      text-align: center;
+      color: var(--pink);
+      letter-spacing: 4px;
+      font-size: 0.8rem;
+      font-weight: 500;
+      margin-bottom: 12px;
+    }
+
+    h1 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2.4rem, 5vw, 3.8rem);
+      line-height: 0.95;
+      font-weight: 500;
+      text-align: center;
+      text-transform: uppercase;
+      letter-spacing: -0.01em;
+    }
+
+    .back-link {
+      text-align: center;
+      margin-bottom: 24px;
+    }
+
+    .back-link a {
+      color: var(--ink);
+      text-decoration: none;
+      font-size: 0.9rem;
+      transition: color 0.2s ease;
+    }
+
+    .back-link a:hover {
+      color: var(--pink);
+    }
+
+    .petal {
+      position: fixed;
+      top: -10vh;
+      color: var(--pink-light);
+      pointer-events: none;
+      animation: fall linear infinite;
+      z-index: 1;
+      user-select: none;
+    }
+
+    @keyframes fall {
+      from {
+        transform: translateY(-10vh) rotate(0deg);
+      }
+      to {
+        transform: translateY(110vh) rotate(360deg);
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="frame" aria-hidden="true"></div>
+
+  <div class="petal" style="left: 5%; animation-duration: 12s; font-size: 22px;" aria-hidden="true">🌸</div>
+  <div class="petal" style="left: 18%; animation-duration: 16s; font-size: 18px;" aria-hidden="true">❀</div>
+  <div class="petal" style="left: 33%; animation-duration: 14s; font-size: 24px;" aria-hidden="true">🌸</div>
+  <div class="petal" style="left: 49%; animation-duration: 19s; font-size: 20px;" aria-hidden="true">❀</div>
+  <div class="petal" style="left: 66%; animation-duration: 13s; font-size: 22px;" aria-hidden="true">🌸</div>
+  <div class="petal" style="left: 81%; animation-duration: 17s; font-size: 18px;" aria-hidden="true">❀</div>
+  <div class="petal" style="left: 92%; animation-duration: 15s; font-size: 24px;" aria-hidden="true">🌸</div>
+
+  <div class="wrapper">
+    <main class="panel">
+      <div class="back-link">
+        <a href="index.html">← Back to Home</a>
+      </div>
+
+      <div class="stamp">✦ CHAPTER 03 ✦</div>
+      <h1>DESIGN A ___</h1>
+      
+      <p style="text-align: center; margin-top: 24px; font-size: 1rem; line-height: 1.6;">
+        This is Chapter 03 of your A.I. FOR DESIGNERS course.<br><br>
+        Add your project content here.
+      </p>
+    </main>
+  </div>
+
+</body>
+</html>
