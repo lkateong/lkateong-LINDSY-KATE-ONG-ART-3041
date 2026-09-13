@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>A.I. FOR DESIGNERS — Lindsy Kate</title>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --paper: #f7f3eb;
+      --ink: #171717;
+      --pink: #d47b95;
+      --pink-light: #e7b6c5;
+      --line: #dec8d1;
+      --muted: #555555;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--paper);
+      background-image: radial-gradient(rgba(0, 0, 0, 0.08) 0.7px, transparent 0.7px);
+      background-size: 10px 10px;
+      font-family: 'Inter', sans-serif;
+      color: var(--ink);
+      padding: 24px 16px;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    .frame {
+      position: fixed;
+      inset: 8px;
+      border: 2px solid rgba(231, 182, 197, 0.45);
+      pointer-events: none;
+      z-index: 10;
+    }
+    .frame::before,
+    .frame::after {
+      content: '❀ ✦ ❀';
+      position: absolute;
+      color: var(--pink);
+      font-size: 0.85rem;
+    }
+    .frame::before { top: 8px; left: 8px; }
+    .frame::after { bottom: 8px; right: 8px; }
+
+    .wrapper {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: calc(100vh - 48px);
+      width: 100%;
+    }
+
+    .panel {
+      width: 100%;
+      max-width: 620px;
+      margin: 40px auto;
+      padding: 36px 28px;
+      border: 3px solid var(--ink);
+      background: var(--paper);
+      position: relative;
+      z-index: 2;
+      box-shadow: 6px 6px 0px rgba(23, 23, 23, 0.05);
+    }
+
+    .stamp {
+      text-align: center;
+      color: var(--pink);
+      letter-spacing: 4px;
+      font-size: 0.8rem;
+      font-weight: 500;
+      margin-bottom: 12px;
+    }
+
+    h1 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2.4rem, 5vw, 3.8rem);
+      line-height: 0.95;
+      font-weight: 500;
+      text-align: center;
+      text-transform: uppercase;
+      letter-spacing: -0.01em;
+    }
+
+    .meta {
+      text-align: center;
+      margin-top: 18px;
+    }
+    .meta p {
+      margin-bottom: 6px;
+      font-size: 0.95rem;
+    }
+    .meta a {
+      color: var(--ink);
+      text-decoration: none;
+      transition: color 0.2s ease;
+    }
+    .meta a:hover,
+    .meta a:focus-visible {
+      color: var(--pink);
+      text-decoration: none;
+      outline: none;
+    }
+
+    hr.divider {
+      border: none;
+      border-top: 2px solid var(--line);
+      margin: 24px 0;
+    }
+
+    .list {
+      list-style: none;
+    }
+    .list li {
+      border-top: 1px solid var(--line);
+    }
+    .list li:first-child {
+      border-top: none;
+    }
+    .list li:last-child {
+      border-bottom: 1px solid var(--line);
+    }
+    .list a {
+      display: block;
+      padding: 14px 4px;
+      text-decoration: none;
+      color: var(--ink);
+      transition: all 0.2s ease;
+    }
+    .list a:hover,
+    .list a:focus-visible {
+      padding-left: 12px;
+      color: var(--pink);
+      outline: none;
+    }
+    .list .chapter {
+      font-size: 0.75rem;
+      letter-spacing: 2px;
+      color: var(--muted);
+      display: block;
+      margin-bottom: 4px;
+      font-weight: 500;
+    }
+    .list .title {
+      font-size: 1.1rem;
+      font-weight: 500;
+    }
+
+    .petal {
+      position: fixed;
+      top: -10vh;
+      color: var(--pink-light);
+      pointer-events: none;
+      animation: fall linear infinite;
+      z-index: 1;
+      user-select: none;
+    }
+
+    @keyframes fall {
+      from {
+        transform: translateY(-10vh) rotate(0deg);
+      }
+      to {
+        transform: translateY(110vh) rotate(360deg);
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="frame" aria-hidden="true"></div>
+
+  <div class="petal" style="left: 5%; animation-duration: 12s; font-size: 22px;" aria-hidden="true">🌸</div>
+  <div class="petal" style="left: 18%; animation-duration: 16s; font-size: 18px;" aria-hidden="true">❀</div>
+  <div class="petal" style="left: 33%; animation-duration: 14s; font-size: 24px;" aria-hidden="true">🌸</div>
+  <div class="petal" style="left: 49%; animation-duration: 19s; font-size: 20px;" aria-hidden="true">❀</div>
+  <div class="petal" style="left: 66%; animation-duration: 13s; font-size: 22px;" aria-hidden="true">🌸</div>
+  <div class="petal" style="left: 81%; animation-duration: 17s; font-size: 18px;" aria-hidden="true">❀</div>
+  <div class="petal" style="left: 92%; animation-duration: 15s; font-size: 24px;" aria-hidden="true">🌸</div>
+
+  <div class="wrapper">
+    <main class="panel">
+      <div class="stamp">✦ FALL 2026 ✦</div>
+      <h1>A.I. FOR<br>DESIGNERS —<br>Lindsy Kate</h1>
+      
+      <div class="meta">
+        <p>ART 3041 · Fall 2026</p>
+        <p><a href="mailto:LINDSYKATE.ONG52@stu-mail.baruch.cuny.edu">LINDSYKATE.ONG52@stu-mail.baruch.cuny.edu</a></p>
+      </div>
+
+      <hr class="divider">
+
+      <nav aria-label="Course chapters">
+        <ul class="list">
+          <li>
+            <a href="#">
+              <span class="chapter">CHAPTER 01</span>
+              <span class="title">Custom Instructions</span>
+            </a>
+          </li>
+          <li>
+            <a href="#">
+              <span class="chapter">CHAPTER 02</span>
+              <span class="title">A Style Guide for Your AI</span>
+            </a>
+          </li>
+          <li>
+            <a href="tokyo_showa_biblio_automaton (3).html">
+              <span class="chapter">CHAPTER 03</span>
+              <span class="title">Design a ___</span>
+            </a>
+          </li>
+          <li>
+            <a href="#">
+              <span class="chapter">CHAPTER 04</span>
+              <span class="title">Commute Story</span>
+            </a>
+          </li>
+          <li>
+            <a href="#">
+              <span class="chapter">CHAPTER 05</span>
+              <span class="title">Become a Crea(i)tive Director</span>
+            </a>
+          </li>
+          <li>
+            <a href="#">
+              <span class="chapter">CHAPTER 06</span>
+              <span class="title">Experimental AI Interface</span>
+            </a>
+          </li>
+          <li>
+            <a href="#">
+              <span class="chapter">CHAPTER 07</span>
+              <span class="title">Open</span>
+            </a>
+          </li>
+        </ul>
+      </nav>
+    </main>
+  </div>
+
+</body>
+</html>
