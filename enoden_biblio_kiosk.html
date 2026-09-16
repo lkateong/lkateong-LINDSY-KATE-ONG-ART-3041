@@ -1,0 +1,1163 @@
+<!DOCTYPE html>
+<html lang="ja" class="h-full bg-slate-950 select-none">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>昭和浪漫自動販売機 - Enoden Retro Biblio-Automaton</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Pixel Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Silkscreen:wght@400;700&family=DotGothic16&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        pixelCyan: '#00e5ff',
+                        pixelBlue: '#0f380f',
+                        pixelPink: '#ff77a8',
+                        pixelYellow: '#ffcc00',
+                        pixelCream: '#f4f4e8',
+                        pixelDark: '#0f0f1b',
+                        acureCyan: '#00a8cc',
+                        acureDark: '#005f73'
+                    },
+                    fontFamily: {
+                        pixel: ['"Press Start 2P"', 'monospace'],
+                        silk: ['"Silkscreen"', 'monospace'],
+                        dot: ['"DotGothic16"', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        * {
+            image-rendering: pixelated;
+            image-rendering: crisp-edges;
+        }
+
+        /* Scanline Overlay for Vintage Arcade / Anime CRT Feel */
+        .scanlines {
+            background: linear-gradient(
+                to bottom,
+                rgba(255,255,255,0) 50%,
+                rgba(0, 0, 0, 0.2) 50%
+            );
+            background-size: 100% 4px;
+        }
+
+        /* 8-bit Border Utilities */
+        .pixel-border {
+            box-shadow: 
+                -4px 0 0 0 #1b1b2f,
+                4px 0 0 0 #1b1b2f,
+                0 -4px 0 0 #1b1b2f,
+                0 4px 0 0 #1b1b2f;
+        }
+
+        .pixel-border-gold {
+            box-shadow: 
+                -4px 0 0 0 #ffcc00,
+                4px 0 0 0 #ffcc00,
+                0 -4px 0 0 #ffcc00,
+                0 4px 0 0 #ffcc00;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0f0f1b;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #00e5ff;
+            border-radius: 0px;
+        }
+
+        /* Animations */
+        @keyframes coilRotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .anim-coil {
+            animation: coilRotate 1s steps(8) infinite;
+        }
+
+        @keyframes pixelDrop {
+            0% { transform: translateY(0px) scale(1); opacity: 1; }
+            50% { transform: translateY(160px) scale(0.9) rotate(-3deg); opacity: 1; }
+            85% { transform: translateY(290px) scale(0.8) rotate(2deg); opacity: 1; }
+            100% { transform: translateY(330px) scale(0.7) rotate(0deg); opacity: 0; }
+        }
+        .drop-anim-active {
+            animation: pixelDrop 1.1s steps(12) forwards;
+        }
+
+        @keyframes hankoStamp {
+            0% { transform: scale(2) rotate(-15deg); opacity: 0; }
+            80% { transform: scale(0.95) rotate(-5deg); opacity: 1; }
+            100% { transform: scale(1) rotate(-8deg); opacity: 0.9; }
+        }
+        .hanko-stamp {
+            animation: hankoStamp 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+        }
+    </style>
+</head>
+<body class="bg-slate-950 font-dot min-h-screen text-slate-100 flex flex-col justify-between overflow-x-hidden relative">
+
+    <!-- Full-screen Parallax Ghibli Countryside Canvas -->
+    <canvas id="bg-canvas" class="fixed inset-0 w-full h-full z-0 pointer-events-none"></canvas>
+    
+    <!-- Retro Scanline Overlay -->
+    <div class="fixed inset-0 scanlines pointer-events-none z-10 opacity-25"></div>
+
+    <!-- Header Navigation & Environment Controls Bar -->
+    <header class="relative z-20 w-full max-w-5xl mx-auto p-2 sm:p-4 flex items-center justify-between bg-slate-900/90 border-b-4 border-slate-700 backdrop-blur-md">
+        <div class="flex items-center gap-2 sm:gap-3">
+            <div class="w-8 h-8 sm:w-10 sm:h-10 bg-acureCyan border-2 border-white flex items-center justify-center font-pixel text-white text-xs sm:text-base shadow">
+                駅
+            </div>
+            <div>
+                <h1 class="font-pixel text-xs sm:text-sm text-cyan-300 tracking-wider">ENODEN BIBLIO KIOSK</h1>
+                <p class="font-silk text-[9px] text-slate-400">KAMAKURA COASTAL STATION DISPENSER</p>
+            </div>
+        </div>
+
+        <div class="flex items-center gap-2">
+            <!-- Environment Cycle Button -->
+            <button onclick="cycleEnvironment()" id="env-btn" class="bg-slate-800 hover:bg-slate-700 text-yellow-300 font-silk text-[10px] px-2.5 py-1.5 border-2 border-slate-600 flex items-center gap-1.5 transition active:scale-95">
+                <i id="env-icon" class="fa-solid fa-sun"></i>
+                <span id="env-text" class="hidden sm:inline">DAYTIME</span>
+            </button>
+
+            <!-- Audio Toggle -->
+            <button onclick="toggleAudio()" id="audio-btn" class="bg-slate-800 hover:bg-slate-700 text-cyan-300 font-silk text-[10px] px-2.5 py-1.5 border-2 border-slate-600 flex items-center gap-1.5 transition active:scale-95">
+                <i id="audio-icon" class="fa-solid fa-volume-high"></i>
+                <span class="hidden sm:inline">SOUND: ON</span>
+            </button>
+
+            <!-- My Bookshelf Drawer Trigger -->
+            <button onclick="toggleCatalogDrawer()" class="bg-pink-600 hover:bg-pink-500 text-white font-silk text-[10px] px-3 py-1.5 border-2 border-white flex items-center gap-1.5 transition active:scale-95">
+                <i class="fa-solid fa-book-bookmark"></i>
+                <span>図書 (<span id="saved-count">0</span>)</span>
+            </button>
+        </div>
+    </header>
+
+    <!-- Main Interactive Vending Machine Shell -->
+    <main class="relative z-20 my-auto py-4 px-2 flex justify-center items-center">
+        <div class="w-full max-w-[560px] bg-slate-200 border-4 border-slate-900 rounded-t-2xl rounded-b-lg shadow-2xl relative flex flex-col p-2 sm:p-3 bg-gradient-to-b from-slate-100 via-slate-200 to-slate-300">
+            
+            <!-- Top ACURE Header Signage ("1台分 500円") -->
+            <div class="bg-gradient-to-r from-blue-900 via-acureDark to-blue-900 border-2 border-slate-900 p-2 rounded-t-lg flex items-center justify-between text-white mb-2 relative overflow-hidden">
+                <div class="flex items-center gap-2 z-10">
+                    <span class="bg-red-600 font-pixel text-[9px] sm:text-[10px] px-1.5 py-1 border border-white text-white">自販</span>
+                    <div class="flex items-baseline font-pixel text-yellow-300 text-sm sm:text-base tracking-tighter">
+                        <span class="text-[9px] text-cyan-300 mr-1">1台分</span>
+                        <span class="text-xl sm:text-2xl text-white font-bold">500</span>円
+                    </div>
+                </div>
+                <div class="text-right z-10 font-silk text-[8px] sm:text-[9px] text-cyan-200">
+                    <div>JR-CROSS ROMANCE DISPENSER</div>
+                    <div class="text-yellow-300">★ TOUCH SUICA OR INSERT 500YEN ★</div>
+                </div>
+                <div class="absolute inset-0 bg-cyan-400/10 pointer-events-none"></div>
+            </div>
+
+            <!-- Vending Cabinet Grid & Side Control Panel -->
+            <div class="grid grid-cols-12 gap-2 bg-slate-800 p-2 border-2 border-slate-900 rounded">
+                
+                <!-- Left 8-Cols: Shelf Window & Display Screen -->
+                <div class="col-span-8 bg-slate-950 border-2 border-slate-700 p-2 flex flex-col justify-between relative min-h-[520px] shadow-inner overflow-hidden">
+                    
+                    <!-- Cyan Backlight Glow -->
+                    <div class="absolute inset-0 bg-cyan-950/30 pointer-events-none"></div>
+
+                    <!-- Shelf Grid Items Container -->
+                    <div id="vending-grid" class="relative z-10 flex flex-col justify-between gap-2 h-full">
+                        <!-- Dynamic Shelves injected via JS -->
+                    </div>
+
+                    <!-- Book Drop Overlay Animation -->
+                    <div id="drop-anim-layer" class="absolute inset-0 pointer-events-none z-30 hidden flex justify-center">
+                        <div id="anim-book-element" class="w-16 h-22 bg-slate-900 border-2 border-cyan-300 p-1 flex flex-col items-center justify-center">
+                            <img id="anim-book-img" src="" class="w-full h-full object-cover">
+                        </div>
+                    </div>
+
+                    <!-- Shelf Pagination Controls -->
+                    <div class="relative z-20 mt-2 bg-slate-900 border border-slate-700 p-1 flex items-center justify-between text-xs font-silk">
+                        <button onclick="changePage(-1)" class="bg-cyan-700 hover:bg-cyan-600 text-white px-2 py-0.5 border border-cyan-400 text-[9px] active:scale-90">
+                            &lt; PREV
+                        </button>
+                        <span id="page-indicator" class="text-cyan-300 text-[9px]">PAGE 1 / 4</span>
+                        <button onclick="changePage(1)" class="bg-cyan-700 hover:bg-cyan-600 text-white px-2 py-0.5 border border-cyan-400 text-[9px] active:scale-90">
+                            NEXT &gt;
+                        </button>
+                    </div>
+
+                </div>
+
+                <!-- Right 4-Cols: Physical Vending Controls -->
+                <div class="col-span-4 bg-slate-300 border-2 border-slate-900 p-1.5 flex flex-col justify-between gap-2 text-slate-900">
+                    
+                    <!-- Coin Receiver Slot -->
+                    <div class="bg-slate-200 border-2 border-slate-800 p-1.5 text-center flex flex-col items-center shadow-sm">
+                        <span class="font-silk text-[8px] font-bold text-slate-700">COIN SLOT (500YEN)</span>
+                        <div class="w-10 h-2 bg-slate-950 rounded-full my-1 border border-slate-600 flex items-center justify-center">
+                            <div class="w-6 h-0.5 bg-slate-500"></div>
+                        </div>
+                        <button onclick="insertCoin(500)" class="w-full bg-amber-500 hover:bg-amber-400 text-slate-950 font-pixel text-[8px] py-1 border border-amber-700 shadow active:scale-95">
+                            +500円
+                        </button>
+                    </div>
+
+                    <!-- Suica IC Card Terminal -->
+                    <div class="bg-slate-200 border-2 border-slate-800 p-1.5 flex flex-col items-center text-center">
+                        <div class="w-full bg-green-600 text-white font-pixel text-[7px] py-0.5 mb-1 border border-green-800">
+                            Suica / PASMO
+                        </div>
+                        <div onclick="tapSuica()" class="w-full h-14 bg-slate-900 border-2 border-cyan-400 cursor-pointer flex flex-col items-center justify-center text-cyan-300 hover:bg-slate-800 active:scale-95 transition">
+                            <i class="fa-solid fa-wifi text-sm animate-pulse mb-0.5"></i>
+                            <span class="font-pixel text-[7px]">TOUCH HERE</span>
+                        </div>
+                        <div class="w-full bg-slate-950 border border-slate-800 mt-1 p-0.5 text-center font-pixel text-[8px] text-green-400">
+                            <span id="balance-txt">1000</span>円
+                        </div>
+                    </div>
+
+                    <!-- Coin Return Switch -->
+                    <div class="bg-slate-200 border-2 border-slate-800 p-1 flex items-center justify-between">
+                        <span class="font-silk text-[7px] text-slate-700">COIN RETURN</span>
+                        <button onclick="refundMoney()" class="w-6 h-6 bg-red-600 hover:bg-red-500 text-white font-pixel text-[8px] rounded border border-red-800 flex items-center justify-center active:scale-90">
+                            返
+                        </button>
+                    </div>
+
+                    <!-- Digital Monitor Status Box -->
+                    <div class="bg-slate-950 border-2 border-cyan-500 p-1.5 text-center flex flex-col justify-between min-h-[90px]">
+                        <div class="font-pixel text-[7px] text-cyan-400 border-b border-cyan-900 pb-0.5">STATUS</div>
+                        <div id="lcd-status" class="my-auto font-dot text-xs text-white leading-tight">
+                            ボタンを選択するか<br><span class="text-yellow-300">Suicaをタッチ</span>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- Bottom Exit Chute & Brand Banner -->
+            <div class="mt-2 bg-slate-300 border-2 border-slate-900 p-2 relative overflow-hidden flex flex-col gap-2">
+                
+                <!-- ACURE Teal Wave Background Graphic -->
+                <div class="absolute inset-0 bg-acureCyan/30 pointer-events-none -rotate-2 scale-125 origin-bottom-left"></div>
+
+                <!-- Heavy Metal Drop Flap Bay -->
+                <div class="relative z-10 bg-slate-950 border-2 border-slate-800 p-2 flex flex-col gap-1">
+                    <div class="flex items-center justify-between font-silk text-[8px] text-cyan-300">
+                        <span>RECEIVING CHUTE (取出口)</span>
+                        <span id="chute-lbl" class="text-yellow-300">EMPTY</span>
+                    </div>
+
+                    <!-- Flap Door Container -->
+                    <div id="chute-bay" onclick="claimVendedItem()" class="w-full h-14 bg-slate-900 border-2 border-slate-700 relative flex items-center justify-center cursor-pointer group overflow-hidden">
+                        
+                        <!-- Metal Hinged Flap -->
+                        <div id="chute-flap" class="absolute inset-0 bg-slate-800 border-b-4 border-slate-950 flex items-center justify-center text-slate-300 font-pixel text-[9px] group-hover:bg-slate-700 transition-transform duration-300">
+                            [ PUSH TO OPEN / 押して取出す ]
+                        </div>
+
+                        <!-- Waiting Dispensed Book Badge -->
+                        <div id="chute-book-item" class="hidden z-20 animate-bounce">
+                            <div class="bg-pink-600 text-white font-pixel text-[9px] px-3 py-1.5 border-2 border-white shadow-lg flex items-center gap-2">
+                                <i class="fa-solid fa-heart text-yellow-300"></i>
+                                <span>CLICK TO CLAIM ROMANCE MANGA!</span>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- Brand Logos -->
+                <div class="relative z-10 flex items-center justify-between px-1">
+                    <span class="font-pixel text-xl italic text-acureDark font-bold tracking-tighter">acure</span>
+                    <span class="font-silk text-[9px] text-slate-700 font-bold">JR-Cross Dispensary</span>
+                </div>
+
+            </div>
+
+        </div>
+    </main>
+
+    <!-- Library Checkout Slip Modal (貸出カード) -->
+    <div id="modal-checkout" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center p-3 hidden">
+        <div id="modal-box" class="bg-pixelCream text-slate-900 border-4 border-slate-900 max-w-lg w-full p-4 relative shadow-2xl font-dot pixel-border-gold">
+            
+            <button onclick="closeModal()" class="absolute -top-3 -right-3 bg-red-600 hover:bg-red-500 text-white font-pixel w-8 h-8 border-2 border-slate-900 flex items-center justify-center text-xs">
+                X
+            </button>
+
+            <!-- Card Header -->
+            <div class="border-b-2 border-dashed border-slate-800 pb-2 mb-3 text-center">
+                <span class="bg-slate-900 text-yellow-300 font-pixel text-[9px] px-2 py-1">
+                    図書貸出票 - CHECKOUT SLIP
+                </span>
+            </div>
+
+            <!-- Card Body -->
+            <div class="grid grid-cols-12 gap-3 items-center">
+                <div class="col-span-5 flex flex-col items-center">
+                    <img id="m-img" src="" class="w-full h-44 object-cover border-2 border-slate-900">
+                </div>
+
+                <div class="col-span-7 flex flex-col gap-1.5 text-xs">
+                    <div>
+                        <span id="m-genre" class="bg-pink-600 text-white font-silk text-[8px] px-1.5 py-0.5">GENRE</span>
+                        <h3 id="m-title" class="font-pixel text-xs text-slate-900 mt-1 leading-tight">TITLE</h3>
+                        <p id="m-author" class="font-silk text-[9px] text-slate-600">AUTHOR</p>
+                    </div>
+
+                    <!-- Tropes -->
+                    <div id="m-tropes" class="flex flex-wrap gap-1"></div>
+
+                    <!-- Synopsis -->
+                    <div class="bg-amber-100/90 border border-slate-400 p-2 text-[10px] leading-relaxed max-h-24 overflow-y-auto">
+                        <p id="m-desc">Description...</p>
+                    </div>
+
+                    <!-- Hanko Stamp Box -->
+                    <div class="border border-dashed border-slate-700 p-1 flex items-center justify-between bg-white relative overflow-hidden">
+                        <div>
+                            <div class="font-silk text-[7px] text-slate-500">貸出承認 (STATUS)</div>
+                            <div id="m-date" class="font-pixel text-[8px] text-blue-900">APPROVED</div>
+                        </div>
+                        <div class="border-2 border-red-600 text-red-600 font-pixel text-[8px] p-1 rotate-12 hanko-stamp">
+                            貸出済
+                        </div>
+                    </div>
+
+                    <!-- Save Action Button -->
+                    <button id="btn-save-item" onclick="saveCurrentBook()" class="w-full bg-acureCyan hover:bg-cyan-500 text-slate-950 font-pixel text-[9px] py-1.5 border-2 border-slate-900 shadow active:scale-95">
+                        図書目録に保存 (CATALOG)
+                    </button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Personal Collection Bookshelf Drawer -->
+    <div id="drawer-catalog" class="fixed bottom-0 inset-x-0 bg-slate-900 border-t-4 border-pink-500 z-40 transform translate-y-full transition-transform duration-300 ease-in-out shadow-2xl max-h-[75vh] flex flex-col text-white">
+        <div class="bg-slate-800 p-2.5 border-b border-slate-700 flex items-center justify-between cursor-pointer" onclick="toggleCatalogDrawer()">
+            <div class="flex items-center gap-2">
+                <i class="fa-solid fa-books text-pink-400"></i>
+                <h3 class="font-pixel text-xs text-pink-300">個人所蔵・図書目録 (MY READ ROMANCE CATALOG)</h3>
+            </div>
+            <button class="text-slate-400 hover:text-white font-pixel text-xs">
+                [ CLOSE ]
+            </button>
+        </div>
+
+        <div id="catalog-list" class="p-4 overflow-y-auto grid grid-cols-2 sm:grid-cols-4 md:grid-cols-5 gap-3 flex-grow min-h-[200px]">
+            <!-- Items injected via JS -->
+        </div>
+    </div>
+
+    <script>
+        /* Database of 24 Romance Manga & Manhwa Titles */
+        const CATALOG_BOOKS = [
+            { id: 'b1', title: 'Kimi ni Todoke', genre: '青春・遅燃恋', price: 500, author: 'Karuho Shiina', image: 'https://images.unsplash.com/photo-1532012197267-da84d127e765?auto=format&fit=crop&w=400&q=80', desc: 'Sawako Kuronuma is misunderstood due to her appearance, but her sweet high school world opens up when popular boy Kazehaya befriends her.', tropes: ['Pure Love', 'Slow Burn', 'High School'] },
+            { id: 'b2', title: 'Horimiya', genre: '青春・学園', price: 500, author: 'HERO & Daisuke Hagiwara', image: 'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=400&q=80', desc: 'Popular Hori and quiet Miyamura discover each other\'s hidden home personalities, starting a sweet relationship.', tropes: ['Secret Identity', 'Wholesome', 'Slice of Life'] },
+            { id: 'b3', title: 'A Sign of Affection', genre: '青春・感動恋', price: 500, author: 'Suu Morishita', image: 'https://images.unsplash.com/photo-1512820790803-83ca734da794?auto=format&fit=crop&w=400&q=80', desc: 'Yuki, a deaf college student, meets Itsuomi, a multilingual traveler who opens her world to new romance.', tropes: ['College Life', 'Gentle Lead', 'Heartwarming'] },
+            { id: 'b4', title: 'Fruits Basket', genre: '妖異・感動', price: 500, author: 'Natsuki Takaya', image: 'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=400&q=80', desc: 'Tohru Honda lives with the mysterious Soma family, who are cursed to transform into Zodiac animals when hugged.', tropes: ['Zodiac Curse', 'Healing', 'Classic'] },
+            { id: 'b5', title: 'True Beauty', genre: '青春・三角関係', price: 500, author: 'Yaongyi', image: 'https://images.unsplash.com/photo-1534447677768-be436bb09401?auto=format&fit=crop&w=400&q=80', desc: 'Jugyeong uses makeup to become a goddess at school, navigating a captivating love triangle and inner confidence.', tropes: ['Makeover', 'Love Triangle', 'Manhwa'] },
+            { id: 'b6', title: 'Remarried Empress', genre: '宮廷・逆転', price: 500, author: 'Alphatart', image: 'https://images.unsplash.com/photo-1543002588-bfa74002ed7e?auto=format&fit=crop&w=400&q=80', desc: 'Empress Navier requests a divorce when her husband brings a mistress, only to marry the neighboring kingdom\'s prince.', tropes: ['Royalty', 'Strong Female Lead', 'Revenge'] },
+            { id: 'b7', title: 'A Stepmother\'s Märchen', genre: '歴史・転生', price: 500, author: 'ORKA', image: 'https://images.unsplash.com/photo-1509021436468-d510300e5723?auto=format&fit=crop&w=400&q=80', desc: 'Shuri gets a second chance at life to protect her young noble house and raise her stepchildren.', tropes: ['Time Rewind', 'Noble Family', 'Beautiful Art'] },
+            { id: 'b8', title: 'Secretary Kim', genre: '社内・コメディ', price: 500, author: 'Jung Kyung-yoon', image: 'https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=400&q=80', desc: 'When perfect secretary Kim decides to resign, her narcissistic boss realizes he cannot live without her.', tropes: ['Office Romance', 'Boss & Employee', 'Rom-Com'] },
+            { id: 'b9', title: 'Business Proposal', genre: '契約・社内愛', price: 500, author: 'HaeHwa', image: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=400&q=80', desc: 'Shin Ha-ri goes on a blind date disguised as her friend, only to find out her date is her company CEO.', tropes: ['Fake Dating', 'CEO Lead', 'Hilarious'] },
+            { id: 'b10', title: 'Midnight Secretary', genre: '契機・ファンタジー', price: 500, author: 'Tomu Ohmi', image: 'https://images.unsplash.com/photo-1516979187457-637abb4f9353?auto=format&fit=crop&w=400&q=80', desc: 'A capable secretary discovers her strict executive boss is secretly a high-class vampire.', tropes: ['Vampire Boss', 'Secret Past', 'Supernatural'] },
+            { id: 'b11', title: 'I Raised a Black Dragon', genre: '異世界・育児', price: 500, author: 'Sotte', image: 'https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=400&q=80', desc: 'Reincarnated into a novel, Elonora accidentally imprints a cute baby dragon while being pursued by a sharp investigator.', tropes: ['Reincarnation', 'Cute Dragon', 'Cozy'] },
+            { id: 'b12', title: 'Villainess Hourglass', genre: '悪役令嬢・復讐', price: 500, author: 'SANSOB', image: 'https://images.unsplash.com/photo-1509021436468-d510300e5723?auto=format&fit=crop&w=400&q=80', desc: 'Aria turns back time with a mysterious hourglass to systematically outwit those who betrayed her.', tropes: ['Villainess', 'Clever Lead', 'Strategy'] },
+            { id: 'b13', title: 'My Happy Marriage', genre: '和風・神話愛', price: 500, author: 'Akumi Agitogi', image: 'https://images.unsplash.com/photo-1528164344705-475426879e0d?auto=format&fit=crop&w=400&q=80', desc: 'Miyo is married into a formidable commander\'s house, unlocking ancient gifts and finding unexpected affection.', tropes: ['Taisho Era', 'Healing', 'Supernatural'] },
+            { id: 'b14', title: 'Wotakoi: Love is Hard', genre: 'オタク・社内愛', price: 500, author: 'Fujita', image: 'https://images.unsplash.com/photo-1563089145-599997674d42?auto=format&fit=crop&w=400&q=80', desc: 'A closet otaku female worker and a gamer male employee start dating in an adorable otaku office romance.', tropes: ['Otaku Life', 'Office Friends', 'Comedy'] },
+            { id: 'b15', title: 'Nana', genre: '青春・ドラマ', price: 500, author: 'Ai Yazawa', image: 'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?auto=format&fit=crop&w=400&q=80', desc: 'Two girls named Nana meet on a Tokyo-bound train, bonding over music, romance, and adult ambitions.', tropes: ['Punk Rock', 'Friendship', 'Classic'] },
+            { id: 'b16', title: 'Kamisama Kiss', genre: '神様・妖異', price: 500, author: 'Julietta Suzuki', image: 'https://images.unsplash.com/photo-1578632767115-351597cf2477?auto=format&fit=crop&w=400&q=80', desc: 'Nanami becomes the local deity of a shrine and contracts Tomoe, a reluctant fox familiar.', tropes: ['Fox Spirit', 'Shrine Deity', 'Rom-Com'] },
+            { id: 'b17', title: 'Aoharu Ride', genre: '青春・再会', price: 500, author: 'Io Sakisaka', image: 'https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&w=400&q=80', desc: 'Futaba reunites with her middle school crush Mabuchi in high school, discovering he has changed.', tropes: ['First Love', 'Reunion', 'High School'] },
+            { id: 'b18', title: 'Lovely Complex', genre: '青春・凸凹', price: 500, author: 'Aya Nakahara', image: 'https://images.unsplash.com/photo-1513151233558-d860c5398176?auto=format&fit=crop&w=400&q=80', desc: 'A tall girl and a short boy in Osaka constantly bicker, eventually realizing they are perfect for each other.', tropes: ['Height Difference', 'Osaka Dialect', 'Hilarious'] },
+            { id: 'b19', title: 'Raeliana at the Mansion', genre: '転生・公爵', price: 500, author: 'Milcha', image: 'https://images.unsplash.com/photo-1534447677768-be436bb09401?auto=format&fit=crop&w=400&q=80', desc: 'Raeliana enters a fake engagement with a duke to avoid an untimely fate in a novel world.', tropes: ['Fake Engagement', 'Duke Lead', 'Isekai'] },
+            { id: 'b20', title: 'Skip and Loafer', genre: '青春・日常', price: 500, author: 'Misaki Takamatsu', image: 'https://images.unsplash.com/photo-1529156069898-49953e39b3ac?auto=format&fit=crop&w=400&q=80', desc: 'Small-town girl Mitsumi moves to Tokyo for high school, bringing warmth to everyone she encounters.', tropes: ['Wholesome', 'Tokyo Life', 'Pure Hearts'] },
+            { id: 'b21', title: 'Whisper of the Heart', genre: '青春・夢愛', price: 500, author: 'Aoi Hiiragi', image: 'https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?auto=format&fit=crop&w=400&q=80', desc: 'Shizuku notices all her library books were checked out by Seiji, inspiring her to write her first romance novel.', tropes: ['Library Romance', 'Artistic Lead', 'Ghibli Classic'] },
+            { id: 'b22', title: 'The Apothecary Diaries', genre: '宮廷・推理', price: 500, author: 'Natsu Hyuuga', image: 'https://images.unsplash.com/photo-1507842217343-583bb7270b66?auto=format&fit=crop&w=400&q=80', desc: 'Maomao uses her pharmaceutical knowledge to solve mysteries in the imperial palace alongside court official Jinshi.', tropes: ['Palace Mystery', 'Clever Female Lead', 'Slow Burn'] },
+            { id: 'b23', title: 'My Love Story with Yamada', genre: 'ゲーム・学園', price: 500, author: 'Mashiro', image: 'https://images.unsplash.com/photo-1511512578047-dfb367046420?auto=format&fit=crop&w=400&q=80', desc: 'Akane gets dumped and venting in an MMORPG leads her to meet pro gamer Yamada, starting a sweet romance.', tropes: ['Gamer Romance', 'College & High School', 'Cute'] },
+            { id: 'b24', title: 'Orange', genre: '青春・タイムトラベル', price: 500, author: 'Ichigo Takano', image: 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=400&q=80', desc: 'Naho receives letters from her future self warning her to save transfer student Kakeru from regrets.', tropes: ['Letter from Future', 'Emotional', 'Friendship'] }
+        ];
+
+        /* State Variables */
+        let currentPage = 0;
+        const pageSize = 6;
+        let userBalance = 1000;
+        let soundEnabled = true;
+        let isProcessing = false;
+        let pendingBook = null;
+        let myCollection = [];
+        let envState = 0; // 0: Day, 1: Sunset, 2: Night, 3: Sakura Rain
+
+        try {
+            const saved = localStorage.getItem('pixel_romance_catalog');
+            if (saved) myCollection = JSON.parse(saved);
+        } catch(e) {}
+
+        let audioCtx = null;
+        function getAudioContext() {
+            if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            if (audioCtx.state === 'suspended') audioCtx.resume();
+            return audioCtx;
+        }
+
+        function playPixelSFX(type) {
+            if (!soundEnabled) return;
+            try {
+                const ctx = getAudioContext();
+                const now = ctx.currentTime;
+
+                if (type === 'coin') {
+                    const osc = ctx.createOscillator();
+                    const gain = ctx.createGain();
+                    osc.type = 'square';
+                    osc.frequency.setValueAtTime(987.77, now);
+                    osc.frequency.setValueAtTime(1318.51, now + 0.08);
+                    gain.gain.setValueAtTime(0.15, now);
+                    gain.gain.exponentialRampToValueAtTime(0.01, now + 0.25);
+                    osc.connect(gain);
+                    gain.connect(ctx.destination);
+                    osc.start(now);
+                    osc.stop(now + 0.25);
+                } else if (type === 'suica') {
+                    const osc = ctx.createOscillator();
+                    const gain = ctx.createGain();
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(1760, now);
+                    osc.frequency.setValueAtTime(2093, now + 0.07);
+                    gain.gain.setValueAtTime(0.2, now);
+                    gain.gain.exponentialRampToValueAtTime(0.01, now + 0.2);
+                    osc.connect(gain);
+                    gain.connect(ctx.destination);
+                    osc.start(now);
+                    osc.stop(now + 0.2);
+                } else if (type === 'motor') {
+                    const osc = ctx.createOscillator();
+                    const gain = ctx.createGain();
+                    osc.type = 'sawtooth';
+                    osc.frequency.setValueAtTime(120, now);
+                    osc.frequency.linearRampToValueAtTime(80, now + 0.8);
+                    gain.gain.setValueAtTime(0.1, now);
+                    gain.gain.linearRampToValueAtTime(0.01, now + 0.85);
+                    osc.connect(gain);
+                    gain.connect(ctx.destination);
+                    osc.start(now);
+                    osc.stop(now + 0.85);
+                } else if (type === 'drop') {
+                    const osc = ctx.createOscillator();
+                    const gain = ctx.createGain();
+                    osc.type = 'triangle';
+                    osc.frequency.setValueAtTime(150, now);
+                    osc.frequency.exponentialRampToValueAtTime(30, now + 0.2);
+                    gain.gain.setValueAtTime(0.4, now);
+                    gain.gain.exponentialRampToValueAtTime(0.01, now + 0.22);
+                    osc.connect(gain);
+                    gain.connect(ctx.destination);
+                    osc.start(now);
+                    osc.stop(now + 0.22);
+                } else if (type === 'fanfare') {
+                    [523.25, 659.25, 783.99, 1046.50].forEach((freq, idx) => {
+                        const osc = ctx.createOscillator();
+                        const gain = ctx.createGain();
+                        osc.type = 'square';
+                        osc.frequency.setValueAtTime(freq, now + (idx * 0.08));
+                        gain.gain.setValueAtTime(0.12, now + (idx * 0.08));
+                        gain.gain.exponentialRampToValueAtTime(0.01, now + (idx * 0.08) + 0.15);
+                        osc.connect(gain);
+                        gain.connect(ctx.destination);
+                        osc.start(now + (idx * 0.08));
+                        osc.stop(now + (idx * 0.08) + 0.15);
+                    });
+                }
+            } catch(e){}
+        }
+
+        function renderShelves() {
+            const grid = document.getElementById('vending-grid');
+            grid.innerHTML = '';
+
+            const startIdx = currentPage * pageSize;
+            const endIdx = Math.min(startIdx + pageSize, CATALOG_BOOKS.length);
+            const pageBooks = CATALOG_BOOKS.slice(startIdx, endIdx);
+
+            let rowHTML = '<div class="grid grid-cols-2 gap-2 h-full my-auto">';
+            pageBooks.forEach((book) => {
+                rowHTML += `
+                    <div class="bg-slate-900 border border-slate-700 p-1 flex flex-col justify-between items-center relative group">
+                        <div class="relative w-16 h-20 bg-slate-950 border border-slate-700 flex items-center justify-center overflow-hidden">
+                            <div id="coil-${book.id}" class="absolute z-0 text-slate-600 font-pixel text-xs">
+                                <i class="fa-solid fa-gear"></i>
+                            </div>
+                            <img src="${book.image}" alt="${book.title}" class="w-full h-full object-cover z-10 relative">
+                        </div>
+
+                        <div class="text-center w-full mt-1">
+                            <div class="font-pixel text-[8px] text-cyan-300 truncate">${book.title}</div>
+                            <div class="font-silk text-[8px] text-yellow-300">500円</div>
+                        </div>
+
+                        <button onclick="vendBook('${book.id}')" class="w-full mt-1 bg-cyan-600 hover:bg-cyan-500 text-white font-pixel text-[8px] py-1 border border-cyan-300 active:scale-95 transition shadow">
+                            押す (VEND)
+                        </button>
+                    </div>
+                `;
+            });
+            rowHTML += '</div>';
+
+            grid.innerHTML = rowHTML;
+            document.getElementById('page-indicator').innerText = `PAGE ${currentPage + 1} / ${Math.ceil(CATALOG_BOOKS.length / pageSize)}`;
+        }
+
+        function changePage(dir) {
+            const maxPages = Math.ceil(CATALOG_BOOKS.length / pageSize);
+            currentPage = (currentPage + dir + maxPages) % maxPages;
+            renderShelves();
+        }
+
+        function updateLCD(msg) {
+            document.getElementById('lcd-status').innerHTML = msg;
+        }
+
+        function insertCoin(amt) {
+            userBalance += amt;
+            document.getElementById('balance-txt').innerText = userBalance;
+            playPixelSFX('coin');
+            updateLCD(`<span class="text-green-400">500円 投入完了！</span><br>ボタンを押してください`);
+        }
+
+        function tapSuica() {
+            playPixelSFX('suica');
+            updateLCD(`<span class="text-cyan-300">Suica 決済受付中</span><br>商品ボタンを押してください`);
+        }
+
+        function refundMoney() {
+            if (userBalance > 0) {
+                playPixelSFX('coin');
+                updateLCD(`<span class="text-yellow-300">返却: ${userBalance}円</span>`);
+                userBalance = 0;
+                document.getElementById('balance-txt').innerText = userBalance;
+            }
+        }
+
+        function vendBook(id) {
+            if (isProcessing) return;
+            const book = CATALOG_BOOKS.find(b => b.id === id);
+            if (!book) return;
+
+            if (userBalance < book.price) {
+                updateLCD(`<span class="text-red-400">⚠️ 残高不足 (500円)</span><br>Suicaか硬貨を投入`);
+                return;
+            }
+
+            userBalance -= book.price;
+            document.getElementById('balance-txt').innerText = userBalance;
+            isProcessing = true;
+
+            const coil = document.getElementById(`coil-${id}`);
+            if (coil) coil.classList.add('anim-coil');
+            playPixelSFX('motor');
+
+            updateLCD(`<span class="text-yellow-300">搬出中: 『${book.title}』</span><br>少々お待ちください...`);
+
+            setTimeout(() => {
+                const animLayer = document.getElementById('drop-anim-layer');
+                const animImg = document.getElementById('anim-book-img');
+                const animEl = document.getElementById('anim-book-element');
+
+                animImg.src = book.image;
+                animLayer.classList.remove('hidden');
+                animEl.classList.add('drop-anim-active');
+
+                setTimeout(() => {
+                    playPixelSFX('drop');
+                    if (coil) coil.classList.remove('anim-coil');
+                    animLayer.classList.add('hidden');
+                    animEl.classList.remove('drop-anim-active');
+
+                    pendingBook = book;
+                    document.getElementById('chute-flap').classList.add('translate-y-full', 'opacity-20');
+                    document.getElementById('chute-book-item').classList.remove('hidden');
+                    document.getElementById('chute-lbl').innerText = 'READY!';
+
+                    updateLCD(`<span class="text-green-400">受取口から本を取り出してください！</span>`);
+                    isProcessing = false;
+                }, 1000);
+
+            }, 400);
+        }
+
+        function claimVendedItem() {
+            if (!pendingBook) {
+                updateLCD(`<span>取出口は空です</span>`);
+                return;
+            }
+            playPixelSFX('fanfare');
+            openModal(pendingBook);
+
+            document.getElementById('chute-book-item').classList.add('hidden');
+            document.getElementById('chute-flap').classList.remove('translate-y-full', 'opacity-20');
+            document.getElementById('chute-lbl').innerText = 'EMPTY';
+            pendingBook = null;
+        }
+
+        function openModal(book) {
+            document.getElementById('m-genre').innerText = book.genre;
+            document.getElementById('m-title').innerText = book.title;
+            document.getElementById('m-author').innerText = book.author;
+            document.getElementById('m-desc').innerText = book.desc;
+            document.getElementById('m-img').src = book.image;
+
+            const tropesContainer = document.getElementById('m-tropes');
+            tropesContainer.innerHTML = '';
+            book.tropes.forEach(t => {
+                tropesContainer.innerHTML += `<span class="bg-slate-800 text-yellow-300 font-silk text-[8px] px-1 py-0.5">#${t}</span>`;
+            });
+
+            document.getElementById('modal-checkout').classList.remove('hidden');
+            document.getElementById('modal-checkout').dataset.book = JSON.stringify(book);
+        }
+
+        function closeModal() {
+            document.getElementById('modal-checkout').classList.add('hidden');
+        }
+
+        function saveCurrentBook() {
+            const data = JSON.parse(document.getElementById('modal-checkout').dataset.book || '{}');
+            if (!data.id) return;
+            if (!myCollection.some(b => b.id === data.id)) {
+                myCollection.push(data);
+                try { localStorage.setItem('pixel_romance_catalog', JSON.stringify(myCollection)); } catch(e){}
+                updateCatalogUI();
+            }
+            closeModal();
+        }
+
+        function updateCatalogUI() {
+            document.getElementById('saved-count').innerText = myCollection.length;
+            const list = document.getElementById('catalog-list');
+            list.innerHTML = '';
+            if (myCollection.length === 0) {
+                list.innerHTML = `<div class="col-span-full text-center text-slate-400 font-silk text-xs py-8">図書目録は空です (NO VOLUMES STORED)</div>`;
+                return;
+            }
+            myCollection.forEach(b => {
+                list.innerHTML += `
+                    <div class="bg-slate-800 border border-slate-700 p-2 flex flex-col justify-between">
+                        <img src="${b.image}" class="w-full h-28 object-cover mb-1 border border-slate-600">
+                        <h4 class="font-pixel text-[9px] text-pink-300 truncate">${b.title}</h4>
+                        <p class="font-silk text-[8px] text-slate-400">${b.author}</p>
+                    </div>
+                `;
+            });
+        }
+
+        function toggleCatalogDrawer() {
+            const drawer = document.getElementById('drawer-catalog');
+            drawer.classList.toggle('translate-y-full');
+            updateCatalogUI();
+        }
+
+        function toggleAudio() {
+            soundEnabled = !soundEnabled;
+            const btn = document.getElementById('audio-btn');
+            const icon = document.getElementById('audio-icon');
+            if (soundEnabled) {
+                icon.className = 'fa-solid fa-volume-high';
+                btn.querySelector('span').innerText = 'SOUND: ON';
+            } else {
+                icon.className = 'fa-solid fa-volume-xmark';
+                btn.querySelector('span').innerText = 'SOUND: OFF';
+            }
+        }
+
+        function cycleEnvironment() {
+            envState = (envState + 1) % 4;
+            const icon = document.getElementById('env-icon');
+            const txt = document.getElementById('env-text');
+            if (envState === 0) {
+                icon.className = 'fa-solid fa-sun';
+                txt.innerText = 'DAYTIME';
+            } else if (envState === 1) {
+                icon.className = 'fa-solid fa-sun-plant-wilt';
+                txt.innerText = 'SUNSET';
+            } else if (envState === 2) {
+                icon.className = 'fa-solid fa-moon';
+                txt.innerText = 'NIGHT';
+            } else {
+                icon.className = 'fa-solid fa-spa';
+                txt.innerText = 'SAKURA';
+            }
+        }
+
+        /* High-Density Studio Ghibli-Style Pixel Canvas Renderer with Aesthetic Retro Train */
+        const canvas = document.getElementById('bg-canvas');
+        const ctx = canvas.getContext('2d');
+
+        let trainX = -700;
+        let catX = 120;
+        let cloudX = 0;
+        let crossingBlink = 0;
+        let sparkTimer = 0;
+        let butterflies = [];
+        let sakuraPetals = [];
+        let fireflies = [];
+
+        // Initialize Particles
+        for(let i=0; i<8; i++) {
+            butterflies.push({
+                x: Math.random() * window.innerWidth,
+                y: window.innerHeight * 0.6 + Math.random() * (window.innerHeight * 0.3),
+                vx: (Math.random() - 0.5) * 0.8,
+                vy: (Math.random() - 0.5) * 0.8,
+                color: i % 2 === 0 ? '#ffb703' : '#a2d2ff'
+            });
+        }
+
+        for(let i=0; i<45; i++) {
+            sakuraPetals.push({
+                x: Math.random() * window.innerWidth,
+                y: Math.random() * window.innerHeight,
+                speedX: Math.random() * 1.2 + 0.6,
+                speedY: Math.random() * 1.5 + 0.8,
+                size: Math.random() * 3 + 2,
+                rot: Math.random() * 360
+            });
+        }
+
+        for(let i=0; i<30; i++) {
+            fireflies.push({
+                x: Math.random() * window.innerWidth,
+                y: window.innerHeight * 0.5 + Math.random() * (window.innerHeight * 0.4),
+                radius: Math.random() * 2 + 1,
+                alpha: Math.random(),
+                speed: Math.random() * 0.03 + 0.01
+            });
+        }
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        function drawBackground() {
+            const w = canvas.width;
+            const h = canvas.height;
+
+            // 1. Sky Palette
+            let skyGrad = ctx.createLinearGradient(0, 0, 0, h * 0.7);
+            if (envState === 0 || envState === 3) {
+                skyGrad.addColorStop(0, '#2b580c');
+                skyGrad.addColorStop(0.2, '#3b82f6');
+                skyGrad.addColorStop(0.6, '#93c5fd');
+                skyGrad.addColorStop(1, '#e0f2fe');
+            } else if (envState === 1) {
+                skyGrad.addColorStop(0, '#4a1259');
+                skyGrad.addColorStop(0.3, '#9d174d');
+                skyGrad.addColorStop(0.6, '#f97316');
+                skyGrad.addColorStop(1, '#fde047');
+            } else {
+                skyGrad.addColorStop(0, '#0f172a');
+                skyGrad.addColorStop(0.5, '#1e1b4b');
+                skyGrad.addColorStop(1, '#31103f');
+            }
+            ctx.fillStyle = skyGrad;
+            ctx.fillRect(0, 0, w, h);
+
+            // Night Stars
+            if (envState === 2) {
+                ctx.fillStyle = '#ffffff';
+                for(let i=0; i<60; i++) {
+                    let sx = (i * 137) % w;
+                    let sy = (i * 61) % (h * 0.45);
+                    let starSize = (i % 3 === 0) ? 2 : 1;
+                    ctx.fillRect(sx, sy, starSize, starSize);
+                }
+            }
+
+            // 2. Parallax Distant Misty Mountains
+            ctx.fillStyle = envState === 2 ? '#1e1b4b' : (envState === 1 ? '#701a75' : '#1e3a1e');
+            ctx.beginPath();
+            ctx.moveTo(0, h * 0.55);
+            ctx.lineTo(w * 0.15, h * 0.38);
+            ctx.lineTo(w * 0.35, h * 0.52);
+            ctx.lineTo(w * 0.6, h * 0.32);
+            ctx.lineTo(w * 0.85, h * 0.48);
+            ctx.lineTo(w, h * 0.36);
+            ctx.lineTo(w, h);
+            ctx.lineTo(0, h);
+            ctx.fill();
+
+            // Mountain Mist
+            let mistGrad = ctx.createLinearGradient(0, h * 0.45, 0, h * 0.6);
+            mistGrad.addColorStop(0, 'rgba(255,255,255,0)');
+            mistGrad.addColorStop(1, envState === 2 ? 'rgba(30,27,75,0.6)' : 'rgba(224,242,254,0.4)');
+            ctx.fillStyle = mistGrad;
+            ctx.fillRect(0, h * 0.45, w, h * 0.15);
+
+            // 3. Pixel Cumulus Clouds
+            cloudX += 0.25;
+            const drawPixelCloud = (cx, cy, csize) => {
+                ctx.fillStyle = envState === 2 ? 'rgba(148, 163, 184, 0.25)' : (envState === 1 ? 'rgba(253, 186, 116, 0.85)' : 'rgba(255, 255, 255, 0.9)');
+                let px = (cx + cloudX) % (w + 400) - 200;
+                ctx.fillRect(px, cy, csize * 3, csize);
+                ctx.fillRect(px + csize * 0.5, cy - csize * 0.5, csize * 2, csize * 1.5);
+                ctx.fillRect(px + csize, cy - csize * 0.8, csize * 1.2, csize * 2);
+            };
+            drawPixelCloud(50, h * 0.12, 32);
+            drawPixelCloud(w * 0.45, h * 0.18, 48);
+            drawPixelCloud(w * 0.75, h * 0.08, 28);
+
+            // 4. Rolling Emerald Terraced Rice Paddies
+            ctx.fillStyle = envState === 2 ? '#064e3b' : (envState === 1 ? '#a16207' : '#15803d');
+            ctx.beginPath();
+            ctx.moveTo(0, h * 0.62);
+            ctx.quadraticCurveTo(w * 0.25, h * 0.54, w * 0.5, h * 0.62);
+            ctx.quadraticCurveTo(w * 0.75, h * 0.70, w, h * 0.58);
+            ctx.lineTo(w, h);
+            ctx.lineTo(0, h);
+            ctx.fill();
+
+            // Terraced Water Mirrors
+            ctx.fillStyle = envState === 1 ? 'rgba(251, 146, 60, 0.4)' : (envState === 2 ? 'rgba(99, 102, 241, 0.3)' : 'rgba(186, 230, 253, 0.5)');
+            for(let r=0; r<4; r++) {
+                let rx = w * (0.1 + r * 0.2);
+                let ry = h * (0.6 + r * 0.02);
+                ctx.fillRect(rx, ry, 60 + r * 20, 8);
+            }
+
+            // Japanese Country Houses
+            const drawHouse = (hx, hy) => {
+                ctx.fillStyle = '#451a03';
+                ctx.fillRect(hx, hy, 28, 16);
+                ctx.fillStyle = '#1e293b';
+                ctx.beginPath();
+                ctx.moveTo(hx - 4, hy);
+                ctx.lineTo(hx + 14, hy - 10);
+                ctx.lineTo(hx + 32, hy);
+                ctx.fill();
+                ctx.fillStyle = envState === 2 ? '#fef08a' : '#bfdbfe';
+                ctx.fillRect(hx + 6, hy + 4, 6, 6);
+            };
+            drawHouse(w * 0.18, h * 0.58);
+            drawHouse(w * 0.72, h * 0.55);
+
+            // Overhead Catenary Electric Poles & Dangling Power Wires
+            const railY = h * 0.73;
+            const wireY = railY - 65;
+            ctx.strokeStyle = envState === 2 ? '#334155' : '#64748b';
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            ctx.moveTo(0, wireY);
+            for(let x=0; x<w; x+=100) {
+                ctx.quadraticCurveTo(x + 50, wireY + 8, x + 100, wireY);
+            }
+            ctx.stroke();
+
+            for(let px=40; px<w; px+=220) {
+                ctx.fillStyle = '#1e293b';
+                ctx.fillRect(px, wireY - 15, 6, 80); // Steel Pole
+                ctx.fillStyle = '#e2e8f0';
+                ctx.fillRect(px - 6, wireY, 18, 3); // Crossbar insulator
+            }
+
+            // Ballast Gravel & Railway Track
+            ctx.fillStyle = '#334155';
+            ctx.fillRect(0, railY, w, 16);
+            ctx.fillStyle = '#78350f'; // Wooden Sleepers
+            for(let x=0; x<w; x+=16) {
+                ctx.fillRect(x, railY, 8, 16);
+            }
+            ctx.fillStyle = '#94a3b8'; // Steel Rails
+            ctx.fillRect(0, railY + 2, w, 3);
+            ctx.fillRect(0, railY + 11, w, 3);
+
+            // 5. Aesthetic Retro Enoden 2-Car Electric Train Sprite Engine (Fixed bounds & alignment)
+            const totalTrainWidth = 460;
+            trainX += 3.2;
+            if (trainX > w + totalTrainWidth + 100) {
+                trainX = -totalTrainWidth - 100;
+            }
+
+            const tY = railY - 38;
+            const drawRetroTrainCar = (tx, isFrontCar, isRearCar) => {
+                const cW = 210;
+                const cH = 36;
+
+                // Save canvas context to isolate train car rendering
+                ctx.save();
+
+                // Train Main Body - Cream Top / Sage Green Bottom (Precise bounding boxes)
+                ctx.fillStyle = '#fef08a'; // Cream Yellow Roof Body
+                ctx.fillRect(tx, tY, cW, 16);
+                ctx.fillStyle = '#15803d'; // Sage Forest Green Lower Body
+                ctx.fillRect(tx, tY + 16, cW, 20);
+
+                // Gold Trim Accent Line
+                ctx.fillStyle = '#eab308';
+                ctx.fillRect(tx, tY + 15, cW, 1);
+
+                // Roof Structure
+                ctx.fillStyle = '#475569';
+                ctx.fillRect(tx - 1, tY - 3, cW + 2, 4); // Roof Plate
+                ctx.fillRect(tx + 30, tY - 7, 24, 4);  // AC Vent 1
+                ctx.fillRect(tx + 120, tY - 7, 24, 4); // AC Vent 2
+
+                // Pantograph Electrical Diamond (Only on Lead Car)
+                if (isFrontCar) {
+                    ctx.strokeStyle = '#cbd5e1';
+                    ctx.lineWidth = 2;
+                    ctx.beginPath();
+                    ctx.moveTo(tx + 160, tY - 3);
+                    ctx.lineTo(tx + 170, tY - 16);
+                    ctx.lineTo(tx + 180, tY - 3);
+                    ctx.stroke();
+                    ctx.fillStyle = '#94a3b8';
+                    ctx.fillRect(tx + 162, tY - 17, 16, 2);
+
+                    // Pantograph Spark Effect
+                    sparkTimer++;
+                    if (sparkTimer % 15 === 0) {
+                        ctx.fillStyle = '#38bdf8';
+                        ctx.beginPath();
+                        ctx.arc(tx + 170, tY - 17, 3, 0, Math.PI * 2);
+                        ctx.fill();
+                    }
+                }
+
+                // Windows & Passengers Silhouettes
+                for(let tw = 20; tw < cW - 25; tw += 26) {
+                    ctx.fillStyle = envState === 2 ? '#fef08a' : '#7dd3fc';
+                    ctx.fillRect(tx + tw, tY + 5, 16, 11);
+                    
+                    // Window Frame Line
+                    ctx.fillStyle = '#1e293b';
+                    ctx.fillRect(tx + tw - 1, tY + 4, 18, 1);
+                    ctx.fillRect(tx + tw - 1, tY + 16, 18, 1);
+
+                    // Passenger Silhouettes
+                    if ((tw / 26) % 2 === 0) {
+                        ctx.fillStyle = 'rgba(15, 23, 42, 0.65)';
+                        ctx.fillRect(tx + tw + 3, tY + 9, 10, 7);
+                    }
+                }
+
+                // Passenger Doors
+                ctx.fillStyle = '#0f766e';
+                ctx.fillRect(tx + 4, tY + 5, 12, 28);
+                ctx.fillRect(tx + cW - 16, tY + 5, 12, 28);
+                ctx.fillStyle = '#94a3b8';
+                ctx.fillRect(tx + 9, tY + 7, 2, 12);
+                ctx.fillRect(tx + cW - 11, tY + 7, 2, 12);
+
+                // Wheel Bogies & Undercarriage
+                ctx.fillStyle = '#1e293b';
+                ctx.fillRect(tx + 22, tY + 36, 32, 5);
+                ctx.fillRect(tx + cW - 54, tY + 36, 32, 5);
+                ctx.fillStyle = '#64748b';
+                ctx.beginPath();
+                ctx.arc(tx + 30, tY + 39, 4, 0, Math.PI * 2);
+                ctx.arc(tx + 46, tY + 39, 4, 0, Math.PI * 2);
+                ctx.arc(tx + cW - 46, tY + 39, 4, 0, Math.PI * 2);
+                ctx.arc(tx + cW - 30, tY + 39, 4, 0, Math.PI * 2);
+                ctx.fill();
+
+                // Front Lead Car Special Details
+                if (isFrontCar) {
+                    // Windshield & Driver Cab
+                    ctx.fillStyle = '#38bdf8';
+                    ctx.fillRect(tx + cW - 16, tY + 4, 14, 13);
+                    ctx.fillStyle = '#0f172a';
+                    ctx.fillRect(tx + cW - 16, tY + 8, 2, 9); // Wiper
+
+                    // Headlight Bulb & Beam Projection
+                    ctx.fillStyle = '#fef08a';
+                    ctx.fillRect(tx + cW - 2, tY + 22, 5, 5);
+                    
+                    let headGrad = ctx.createLinearGradient(tx + cW, tY + 24, tx + cW + 180, tY + 24);
+                    headGrad.addColorStop(0, 'rgba(254, 240, 138, 0.55)');
+                    headGrad.addColorStop(1, 'rgba(254, 240, 138, 0)');
+                    ctx.fillStyle = headGrad;
+                    ctx.beginPath();
+                    ctx.moveTo(tx + cW, tY + 20);
+                    ctx.lineTo(tx + cW + 180, tY + 8);
+                    ctx.lineTo(tx + cW + 180, tY + 42);
+                    ctx.lineTo(tx + cW, tY + 30);
+                    ctx.closePath();
+                    ctx.fill();
+
+                    // Illuminated Japanese Destination Board ("鎌倉 Kamakura")
+                    ctx.fillStyle = '#0f172a';
+                    ctx.fillRect(tx + cW - 38, tY - 1, 24, 6);
+                    ctx.fillStyle = '#22c55e';
+                    ctx.fillRect(tx + cW - 36, tY, 20, 4);
+                }
+
+                // Rear Trailing Car Taillights
+                if (isRearCar) {
+                    ctx.fillStyle = '#ef4444'; // Red Taillight
+                    ctx.fillRect(tx, tY + 22, 3, 5);
+                }
+
+                ctx.restore();
+            };
+
+            // Render Car 2 (Rear) then Accordion Bellows then Car 1 (Front)
+            drawRetroTrainCar(trainX - 225, false, true);
+
+            // Accordion Rubber Gangway
+            ctx.fillStyle = '#020617';
+            ctx.fillRect(trainX - 15, tY + 5, 15, 29);
+            for(let bx = trainX - 15; bx < trainX; bx += 3) {
+                ctx.fillStyle = '#334155';
+                ctx.fillRect(bx, tY + 4, 1, 31);
+            }
+
+            drawRetroTrainCar(trainX, true, false);
+
+            // 6. Railway Crossing Signal (Fumikiri)
+            const fX = w * 0.82;
+            const fY = railY - 48;
+            ctx.fillStyle = '#0f172a';
+            ctx.fillRect(fX, fY, 4, 50);
+            ctx.fillStyle = '#facc15';
+            ctx.fillRect(fX - 12, fY + 10, 28, 8);
+            ctx.fillStyle = '#000000';
+            ctx.fillRect(fX - 8, fY + 10, 6, 8);
+            ctx.fillRect(fX + 4, fY + 10, 6, 8);
+
+            crossingBlink++;
+            let redLightOn = Math.floor(crossingBlink / 20) % 2 === 0;
+            ctx.fillStyle = (redLightOn || (trainX > fX - 350 && trainX < fX + 350)) ? '#ef4444' : '#450a0a';
+            ctx.beginPath();
+            ctx.arc(fX - 6, fY + 6, 4, 0, Math.PI * 2);
+            ctx.arc(fX + 10, fY + 6, 4, 0, Math.PI * 2);
+            ctx.fill();
+
+            // 7. Station Platform Surface & Details
+            ctx.fillStyle = envState === 2 ? '#020617' : (envState === 1 ? '#3f2305' : '#1c1917');
+            ctx.fillRect(0, railY + 16, w, h - railY);
+
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.05)';
+            for(let py=railY + 18; py<h; py+=12) {
+                for(let px=(py%24); px<w; px+=24) {
+                    ctx.fillRect(px, py, 10, 4);
+                }
+            }
+
+            // Ghibli Sakura Trees in Foreground
+            const drawSakuraTree = (tx, ty) => {
+                ctx.fillStyle = '#451a03';
+                ctx.fillRect(tx, ty, 14, 55);
+                ctx.fillRect(tx - 6, ty + 20, 8, 8);
+                ctx.fillStyle = envState === 2 ? '#9d174d' : '#f472b6';
+                ctx.beginPath();
+                ctx.arc(tx + 7, ty - 20, 35, 0, Math.PI * 2);
+                ctx.arc(tx - 15, ty - 5, 25, 0, Math.PI * 2);
+                ctx.arc(tx + 25, ty - 5, 25, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.fillStyle = '#fbcfe8';
+                ctx.beginPath();
+                ctx.arc(tx + 2, ty - 25, 18, 0, Math.PI * 2);
+                ctx.fill();
+            };
+            drawSakuraTree(w * 0.08, h * 0.7);
+
+            // Sleeping Shiba Inu
+            const benchX = w * 0.5 + 200;
+            const benchY = h * 0.82;
+            if (benchX < w - 40) {
+                ctx.fillStyle = '#78350f';
+                ctx.fillRect(benchX - 10, benchY + 8, 36, 4);
+                ctx.fillRect(benchX - 6, benchY + 12, 4, 10);
+                ctx.fillRect(benchX + 20, benchY + 12, 4, 10);
+                ctx.fillStyle = '#d97706';
+                ctx.fillRect(benchX, benchY, 18, 10);
+                ctx.fillRect(benchX + 12, benchY - 4, 8, 8);
+                ctx.fillStyle = '#fef3c7';
+                ctx.fillRect(benchX + 16, benchY, 4, 4);
+            }
+
+            // Calico Cat
+            catX += 0.4;
+            if (catX > w + 60) catX = -60;
+            const catY = h * 0.88;
+            ctx.fillStyle = '#f97316';
+            ctx.fillRect(catX, catY, 12, 6);
+            ctx.fillStyle = '#ffffff';
+            ctx.fillRect(catX + 2, catY + 1, 8, 5);
+            ctx.fillStyle = '#0f172a';
+            ctx.fillRect(catX + 10, catY - 3, 4, 4);
+            ctx.fillRect(catX - 2, catY - 5, 2, 6);
+
+            // Weather Particles
+            if (envState === 0 || envState === 3) {
+                butterflies.forEach(b => {
+                    b.x += b.vx + (Math.random() - 0.5) * 0.5;
+                    b.y += b.vy + (Math.random() - 0.5) * 0.5;
+                    if (b.x < 0 || b.x > w) b.vx *= -1;
+                    if (b.y < h * 0.6 || b.y > h * 0.95) b.vy *= -1;
+
+                    ctx.fillStyle = b.color;
+                    ctx.fillRect(b.x, b.y, 3, 3);
+                    ctx.fillRect(b.x - 2, b.y - 2, 2, 2);
+                    ctx.fillRect(b.x + 3, b.y - 2, 2, 2);
+                });
+            }
+
+            if (envState === 2) {
+                fireflies.forEach(f => {
+                    f.alpha += f.speed;
+                    if (f.alpha > 1 || f.alpha < 0) f.speed *= -1;
+                    ctx.fillStyle = `rgba(253, 224, 71, ${Math.max(0, f.alpha)})`;
+                    ctx.beginPath();
+                    ctx.arc(f.x, f.y, f.radius, 0, Math.PI * 2);
+                    ctx.fill();
+                });
+            }
+
+            if (envState === 3 || envState === 0) {
+                sakuraPetals.forEach(p => {
+                    p.x += p.speedX;
+                    p.y += p.speedY;
+                    if (p.x > w) p.x = -10;
+                    if (p.y > h) p.y = -10;
+
+                    ctx.fillStyle = '#f472b6';
+                    ctx.fillRect(p.x, p.y, p.size, p.size);
+                });
+            }
+
+            requestAnimationFrame(drawBackground);
+        }
+
+        window.onload = function() {
+            renderShelves();
+            updateCatalogUI();
+            requestAnimationFrame(drawBackground);
+        };
+    </script>
+</body>
+</html>
