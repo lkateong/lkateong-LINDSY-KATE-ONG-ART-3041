@@ -3,252 +3,452 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Lindsy Kate's ART 3041 course portfolio for Fall 2026.">
   <title>A.I. FOR DESIGNERS — Lindsy Kate</title>
 
   <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&family=Cormorant+Garamond:ital,wght@0,500;0,600;1,400;1,600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
 
   <style>
     :root {
-      --paper: #f7f3eb;
-      --ink: #171717;
-      --pink: #d47b95;
-      --pink-light: #e7b6c5;
-      --line: #dec8d1;
-      --muted: #555555;
+      --bg-room: #f4eedb;
+      --card-bg: rgba(255, 255, 255, 0.94);
+      --card-border: #e2d7bc;
+      --text-main: #332922;
+      --text-muted: #786855;
+      --accent-green: #4a6b4c;
+      --accent-brown: #8c5e3c;
     }
 
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
 
     body {
-      background-color: var(--paper);
-      background-image: radial-gradient(rgba(0, 0, 0, 0.08) 0.7px, transparent 0.7px);
-      background-size: 10px 10px;
+      margin: 0;
+      min-width: 320px;
+      color: var(--text-main);
+      background-color: #faf6eb;
       font-family: 'Inter', sans-serif;
-      color: var(--ink);
-      padding: 24px 16px;
-      min-height: 100vh;
-      overflow-x: hidden;
+      font-size: 16px;
+      line-height: 1.5;
     }
 
-    .frame {
-      position: fixed;
-      inset: 8px;
-      border: 2px solid rgba(231, 182, 197, 0.45);
-      pointer-events: none;
-      z-index: 10;
-    }
-    .frame::before,
-    .frame::after {
-      content: '❀ ✦ ❀';
-      position: absolute;
-      color: var(--pink);
-      font-size: 0.85rem;
-    }
-    .frame::before { top: 8px; left: 8px; }
-    .frame::after { bottom: 8px; right: 8px; }
-
-    .wrapper {
+    /* HERO SECTION WITH SEMI-REALISTIC RENDERED INTERIOR SCENE */
+    .hero {
+      position: relative;
+      width: 100%;
+      height: clamp(540px, 72vh, 800px);
       display: flex;
-      justify-content: center;
+      flex-direction: column;
       align-items: center;
-      min-height: calc(100vh - 48px);
-      width: 100%;
+      justify-content: flex-start;
+      text-align: center;
+      padding: 24px 20px 20px;
+      overflow: hidden;
+      border-bottom: 4px solid #d5cbba;
+      background-color: #c7d4b4;
     }
 
-    .panel {
+    .hero-bg {
+      position: absolute;
+      inset: 0;
       width: 100%;
-      max-width: 620px;
-      margin: 40px auto;
-      padding: 36px 28px;
-      border: 3px solid var(--ink);
-      background: var(--paper);
+      height: 100%;
+      z-index: 1;
+      object-fit: cover;
+      pointer-events: none;
+    }
+
+    /* Elegant Soft-Rounded Glassmorphic Overlay */
+    .hero-content {
       position: relative;
       z-index: 2;
-      box-shadow: 6px 6px 0px rgba(23, 23, 23, 0.05);
+      background: rgba(255, 255, 255, 0.92);
+      backdrop-filter: blur(8px);
+      padding: 22px 36px 26px;
+      border-radius: 18px;
+      border: 2px solid rgba(235, 220, 178, 0.8);
+      box-shadow: 0 12px 35px rgba(60, 50, 40, 0.15);
+      max-width: 90%;
+      width: max-content;
+      margin-top: 10px;
     }
 
-    .stamp {
-      text-align: center;
-      color: var(--pink);
-      letter-spacing: 4px;
-      font-size: 0.8rem;
-      font-weight: 500;
-      margin-bottom: 12px;
+    .hero-badge-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 2px dashed #ebdcb2;
+      padding-bottom: 8px;
+      margin-bottom: 10px;
+      font-family: 'Press Start 2P', monospace;
+      font-size: 0.6rem;
+      color: #9c7c51;
+      letter-spacing: 0.05em;
     }
 
-    h1 {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: clamp(2.4rem, 5vw, 3.8rem);
-      line-height: 0.95;
-      font-weight: 500;
-      text-align: center;
-      text-transform: uppercase;
-      letter-spacing: -0.01em;
-    }
-
-    .meta {
-      text-align: center;
-      margin-top: 18px;
-    }
-    .meta p {
-      margin-bottom: 6px;
-      font-size: 0.95rem;
-    }
-    .meta a {
-      color: var(--ink);
-      text-decoration: none;
-      transition: color 0.2s ease;
-    }
-    .meta a:hover,
-    .meta a:focus-visible {
-      color: var(--pink);
-      text-decoration: none;
-      outline: none;
-    }
-
-    hr.divider {
-      border: none;
-      border-top: 2px solid var(--line);
-      margin: 24px 0;
-    }
-
-    .list {
-      list-style: none;
-    }
-    .list li {
-      border-top: 1px solid var(--line);
-    }
-    .list li:first-child {
-      border-top: none;
-    }
-    .list li:last-child {
-      border-bottom: 1px solid var(--line);
-    }
-    .list a {
-      display: block;
-      padding: 14px 4px;
-      text-decoration: none;
-      color: var(--ink);
-      transition: all 0.2s ease;
-    }
-    .list a:hover,
-    .list a:focus-visible {
-      padding-left: 12px;
-      color: var(--pink);
-      outline: none;
-    }
-    .list .chapter {
-      font-size: 0.75rem;
+    .pixel-hearts {
+      color: #d97777;
       letter-spacing: 2px;
-      color: var(--muted);
-      display: block;
-      margin-bottom: 4px;
-      font-weight: 500;
     }
-    .list .title {
+
+    .hero-title {
+      margin: 0;
+      font-family: 'Press Start 2P', cursive, monospace;
+      font-size: clamp(1.05rem, 2.7vw, 1.9rem);
+      color: #5a7c5c;
+      text-shadow: 2px 2px 0px #f4eedb;
+      line-height: 1.35;
+      letter-spacing: -0.02em;
+    }
+
+    .hero-subtitle {
+      margin: 8px 0 0;
+      font-family: 'VT323', monospace;
+      font-size: clamp(1.5rem, 2.7vw, 2.2rem);
+      color: #5c4f44;
+      letter-spacing: 0.06em;
+    }
+
+    .hero-course {
+      margin-top: 4px;
+      font-family: 'VT323', monospace;
+      font-size: 1.3rem;
+      color: #8c7355;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .hero-email {
+      margin-top: 6px;
+      font-size: 13px;
+    }
+
+    .hero-email a {
+      color: #5a7c5c;
+      text-decoration: none;
+      font-weight: 600;
+      font-family: 'Inter', sans-serif;
+    }
+
+    .hero-email a:hover {
+      text-decoration: underline;
+      color: #3b533c;
+    }
+
+    /* MAIN CONTENT AREA */
+    .content {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 40px 20px 60px;
+    }
+
+    .section-title {
+      text-align: center;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 2.5rem;
+      font-style: italic;
+      color: #3d332a;
+      margin: 0 0 6px;
+    }
+
+    .section-subtitle {
+      text-align: center;
+      color: #786855;
+      font-size: 0.95rem;
+      margin-bottom: 32px;
+    }
+
+    /* ASSIGNMENT CARDS GRID */
+    .work-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .work-item {
+      display: flex;
+      align-items: center;
+      padding: 16px 20px;
+      background: var(--card-bg);
+      border: 1.5px solid var(--card-border);
+      border-radius: 14px;
+      text-decoration: none;
+      color: var(--text-main);
+      box-shadow: 0 4px 12px rgba(110, 95, 75, 0.06);
+      transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+    }
+
+    .work-item:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(110, 95, 75, 0.15);
+      border-color: #a8b89c;
+    }
+
+    .work-num {
+      font-family: 'Press Start 2P', monospace;
+      font-size: 0.85rem;
+      color: #5a7c5c;
+      margin-right: 16px;
+      flex-shrink: 0;
+    }
+
+    .work-title {
+      font-size: 0.98rem;
+      font-weight: 500;
+      flex-grow: 1;
+    }
+
+    .work-icon {
       font-size: 1.1rem;
-      font-weight: 500;
+      margin-left: 10px;
+      opacity: 0.85;
     }
 
-    .petal {
-      position: fixed;
-      top: -10vh;
-      color: var(--pink-light);
-      pointer-events: none;
-      animation: fall linear infinite;
-      z-index: 1;
-      user-select: none;
-    }
-
-    @keyframes fall {
-      from {
-        transform: translateY(-10vh) rotate(0deg);
+    @media (max-width: 640px) {
+      .work-grid {
+        grid-template-columns: 1fr;
       }
-      to {
-        transform: translateY(110vh) rotate(360deg);
+      .hero-content {
+        padding: 16px 20px;
       }
     }
   </style>
 </head>
 <body>
 
-  <div class="frame" aria-hidden="true"></div>
+  <!-- HERO SECTION: SEMI-REALISTIC RENDERED INTERIOR WITH GRADIENT LIGHTING & DEPTH -->
+  <header class="hero">
+    <svg class="hero-bg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 360" preserveAspectRatio="xMidYMid slice">
+      <defs>
+        <!-- Gradients for Semi-Realistic Shading, Textures & Lighting -->
+        <linearGradient id="wallGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%" stop-color="#b6cbb0" />
+          <stop offset="70%" stop-color="#9eb694" />
+          <stop offset="100%" stop-color="#8a9e80" />
+        </linearGradient>
+        <linearGradient id="floorGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#edd9b4" />
+          <stop offset="50%" stop-color="#dec496" />
+          <stop offset="100%" stop-color="#caa978" />
+        </linearGradient>
+        <linearGradient id="woodTexture" x1="0%" y1="0%" x2="100%" y2="0%">
+          <stop offset="0%" stop-color="#b88656" />
+          <stop offset="50%" stop-color="#d4a373" />
+          <stop offset="100%" stop-color="#a37042" />
+        </linearGradient>
+        <linearGradient id="sofaGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%" stop-color="#768f68" />
+          <stop offset="100%" stop-color="#556e49" />
+        </linearGradient>
+        <radialGradient id="sunlightGlow" cx="80%" cy="0%" r="90%">
+          <stop offset="0%" stop-color="#fff8dc" stop-opacity="0.9" />
+          <stop offset="40%" stop-color="#ffe4b5" stop-opacity="0.5" />
+          <stop offset="100%" stop-color="#ffd700" stop-opacity="0.0" />
+        </radialGradient>
+        <filter id="softShadow" x="-10%" y="-10%" width="120%" height="120%">
+          <feGaussianBlur stdDeviation="6" result="blur" />
+          <feColorMatrix type="matrix" values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 0.18 0"/>
+        </filter>
+      </defs>
 
-  <div class="petal" style="left: 5%; animation-duration: 12s; font-size: 22px;" aria-hidden="true">🌸</div>
-  <div class="petal" style="left: 18%; animation-duration: 16s; font-size: 18px;" aria-hidden="true">❀</div>
-  <div class="petal" style="left: 33%; animation-duration: 14s; font-size: 24px;" aria-hidden="true">🌸</div>
-  <div class="petal" style="left: 49%; animation-duration: 19s; font-size: 20px;" aria-hidden="true">❀</div>
-  <div class="petal" style="left: 66%; animation-duration: 13s; font-size: 22px;" aria-hidden="true">🌸</div>
-  <div class="petal" style="left: 81%; animation-duration: 17s; font-size: 18px;" aria-hidden="true">❀</div>
-  <div class="petal" style="left: 92%; animation-duration: 15s; font-size: 24px;" aria-hidden="true">🌸</div>
+      <!-- Wall and Floor Base -->
+      <rect x="0" y="0" width="600" height="200" fill="url(#wallGradient)" />
+      <rect x="0" y="200" width="600" height="160" fill="url(#floorGradient)" />
+      <!-- Baseboard Molding -->
+      <rect x="0" y="194" width="600" height="8" fill="#e2d9c4" opacity="0.9" />
+      <line x1="0" y1="200" x2="600" y2="200" stroke="#6d5843" stroke-width="1.5" opacity="0.6" />
 
-  <div class="wrapper">
-    <main class="panel">
-      <div class="stamp">✦ FALL 2026 ✦</div>
-      <h1>A.I. FOR<br>DESIGNERS —<br>Lindsy Kate</h1>
-      
-      <div class="meta">
-        <p>ART 3041 · Fall 2026</p>
-        <p><a href="mailto:LINDSYKATE.ONG52@stu-mail.baruch.cuny.edu">LINDSYKATE.ONG52@stu-mail.baruch.cuny.edu</a></p>
+      <!-- Floorboards Perspective Lines -->
+      <g stroke="#b89768" stroke-width="0.8" opacity="0.4">
+        <line x1="0" y1="230" x2="600" y2="230" />
+        <line x1="0" y1="270" x2="600" y2="270" />
+        <line x1="0" y1="315" x2="600" y2="315" />
+        <line x1="0" y1="360" x2="600" y2="360" />
+      </g>
+
+      <!-- Glass Balcony Window / Sliding Door (Right side with realistic reflection) -->
+      <g transform="translate(415, 10)">
+        <rect x="0" y="0" width="185" height="235" fill="#a4c2d6" opacity="0.5" stroke="#3b4f58" stroke-width="3" />
+        <rect x="10" y="10" width="165" height="215" fill="none" stroke="#6a899c" stroke-width="1" />
+        <line x1="92" y1="0" x2="92" y2="235" stroke="#3b4f58" stroke-width="2.5" />
+        <!-- Window Glare & Reflection -->
+        <polygon points="10,10 90,10 40,225 10,225" fill="#ffffff" opacity="0.25" />
+        <!-- Balcony view hint -->
+        <rect x="110" y="30" width="60" height="95" fill="#c4b087" stroke="#665233" stroke-width="1.5" rx="3" />
+      </g>
+
+      <!-- Potted Monstera / Plant (Top Center) with Soft Shadow -->
+      <g transform="translate(265, 28)">
+        <ellipse cx="25" cy="52" rx="18" ry="12" fill="#333333" opacity="0.25" filter="url(#softShadow)" />
+        <path d="M 10 45 Q 25 70 40 45 Z" fill="#6d8a7d" stroke="#3a4f47" stroke-width="2" />
+        <ellipse cx="25" cy="45" rx="15" ry="5" fill="#4d635a" />
+        <!-- Realistic Curving Leaves -->
+        <path d="M 25 40 Q 15 15 -5 5 C -2 25 15 35 25 40 Z" fill="#4a735c" stroke="#263b2f" stroke-width="1.5" />
+        <path d="M 25 40 Q 40 18 55 2 C 55 22 38 32 25 40 Z" fill="#5c8a70" stroke="#263b2f" stroke-width="1.5" />
+        <path d="M 25 40 Q 28 10 32 -12 C 36 10 30 28 25 40 Z" fill="#3b634d" stroke="#263b2f" stroke-width="1.5" />
+      </g>
+
+      <!-- GREEN SECTIONAL SOFA (Left) with Ambient Occlusion Shadow -->
+      <g transform="translate(20, 55)">
+        <ellipse cx="140" cy="140" rx="130" ry="30" fill="#222222" opacity="0.3" filter="url(#softShadow)" />
+        <!-- Sofa Base & Cushions -->
+        <rect x="10" y="35" width="260" height="115" rx="20" fill="url(#sofaGradient)" stroke="#3e4f34" stroke-width="2.5" />
+        <!-- Armrests -->
+        <ellipse cx="30" cy="95" rx="25" ry="45" fill="#657d57" stroke="#3e4f34" stroke-width="2" />
+        <ellipse cx="250" cy="95" rx="25" ry="45" fill="#657d57" stroke="#3e4f34" stroke-width="2" />
+        <!-- Back Cushions -->
+        <rect x="35" y="25" width="105" height="85" rx="14" fill="#849e75" stroke="#485c3f" stroke-width="2" />
+        <rect x="145" y="25" width="105" height="85" rx="14" fill="#849e75" stroke="#485c3f" stroke-width="2" />
+        <!-- Seat Cushions -->
+        <rect x="35" y="85" width="105" height="60" rx="12" fill="#58704c" stroke="#3b4d32" stroke-width="2" />
+        <rect x="145" y="85" width="105" height="60" rx="12" fill="#58704c" stroke="#3b4d32" stroke-width="2" />
+
+        <!-- Accent Throw Pillow -->
+        <rect x="55" y="70" width="55" height="45" rx="12" fill="#9ec9ab" stroke="#4a6b55" stroke-width="2" transform="rotate(-12 82 92)" />
+
+        <!-- Rilakkuma Sleeping on Sofa with Chick -->
+        <g transform="translate(120, 38)">
+          <ellipse cx="45" cy="35" rx="30" ry="22" fill="#b08355" stroke="#593e24" stroke-width="2" />
+          <!-- Bear Ears -->
+          <circle cx="28" cy="20" r="10" fill="#b08355" stroke="#593e24" stroke-width="1.8" />
+          <circle cx="28" cy="20" r="4.5" fill="#d9b38c" />
+          <circle cx="58" cy="18" r="10" fill="#b08355" stroke="#593e24" stroke-width="1.8" />
+          <circle cx="58" cy="18" r="4.5" fill="#d9b38c" />
+          <!-- Sleeping face closed eyes -->
+          <path d="M 34 30 Q 38 33 42 30" fill="none" stroke="#593e24" stroke-width="2" stroke-linecap="round" />
+          <!-- Little Yellow Chick -->
+          <circle cx="35" cy="45" r="9" fill="#fce38a" stroke="#b39236" stroke-width="1.8" />
+          <polygon points="41,44 46,46 42,48" fill="#e07a38" />
+        </g>
+      </g>
+
+      <!-- WARM YELLOW FLOOR RUG (Center/Right) -->
+      <g transform="translate(245, 205)">
+        <ellipse cx="130" cy="75" rx="115" ry="65" fill="#fcf2c4" stroke="#e0cb82" stroke-width="2" opacity="0.95" />
+      </g>
+
+      <!-- ROUND WOODEN COFFEE TABLE & TABLEWARE (Bottom Left) -->
+      <g transform="translate(85, 215)">
+        <ellipse cx="70" cy="65" rx="60" ry="18" fill="#222" opacity="0.25" filter="url(#softShadow)" />
+        <ellipse cx="70" cy="55" rx="65" ry="45" fill="url(#woodTexture)" stroke="#593b1e" stroke-width="3" />
+        <ellipse cx="70" cy="52" rx="58" ry="39" fill="#e5bb91" />
+
+        <!-- Realistic White Ceramic Plates & Cups -->
+        <ellipse cx="45" cy="38" rx="16" ry="11" fill="#ffffff" stroke="#b0c4de" stroke-width="1.5" />
+        <ellipse cx="90" cy="35" rx="18" ry="12" fill="#ffffff" stroke="#b0c4de" stroke-width="1.5" />
+        <ellipse cx="85" cy="72" rx="20" ry="13" fill="#ffffff" stroke="#b0c4de" stroke-width="1.5" />
+        <!-- Yellow Duck Plate -->
+        <circle cx="65" cy="55" r="13" fill="#fce38a" stroke="#c29b38" stroke-width="1.5" />
+        <!-- Tea Cups -->
+        <rect x="25" y="52" width="11" height="13" rx="3" fill="#75aadb" stroke="#2c5e7b" stroke-width="1.5" />
+        <rect x="102" y="48" width="11" height="13" rx="3" fill="#f498a7" stroke="#993d4f" stroke-width="1.5" />
+      </g>
+
+      <!-- KORILAKKUMA & RILAKKUMA LYING ON THE RUG (Right Side) -->
+      <!-- Korilakkuma (White Bear) -->
+      <g transform="translate(260, 220)">
+        <ellipse cx="55" cy="45" rx="27" ry="21" fill="#ffffff" stroke="#4a3b32" stroke-width="2.2" />
+        <circle cx="38" cy="32" r="8.5" fill="#ffffff" stroke="#4a3b32" stroke-width="1.8" />
+        <circle cx="38" cy="32" r="3.5" fill="#f4afc4" />
+        <circle cx="68" cy="28" r="8.5" fill="#ffffff" stroke="#4a3b32" stroke-width="1.8" />
+        <circle cx="68" cy="28" r="3.5" fill="#f4afc4" />
+        <!-- Face -->
+        <circle cx="48" cy="42" r="2" fill="#4a3b32" />
+        <circle cx="61" cy="40" r="2" fill="#4a3b32" />
+        <ellipse cx="54" cy="45" rx="2.5" ry="1.8" fill="#4a3b32" />
+        <!-- Body & Red Button -->
+        <path d="M 35 55 Q 55 50 75 60 L 80 82 Q 55 92 30 82 Z" fill="#ffffff" stroke="#4a3b32" stroke-width="2.2" />
+        <circle cx="55" cy="67" r="4.5" fill="#e05353" stroke="#7a2424" stroke-width="1.5" />
+      </g>
+
+      <!-- Rilakkuma Lying Down (Brown Bear) -->
+      <g transform="translate(325, 225)">
+        <path d="M 25 35 Q 60 15 95 35 L 125 75 Q 110 112 75 102 L 35 88 Z" fill="#b08355" stroke="#4a3520" stroke-width="2.5" />
+        <ellipse cx="75" cy="72" rx="20" ry="16" fill="#ffffff" stroke="#4a3520" stroke-width="1.8" />
+        <!-- Head -->
+        <circle cx="95" cy="40" r="28" fill="#b08355" stroke="#4a3520" stroke-width="2.5" />
+        <circle cx="78" cy="22" r="9.5" fill="#b08355" stroke="#4a3520" stroke-width="2" />
+        <circle cx="78" cy="22" r="4" fill="#fce38a" />
+        <circle cx="112" cy="20" r="9.5" fill="#b08355" stroke="#4a3520" stroke-width="2" />
+        <circle cx="112" cy="20" r="4" fill="#fce38a" />
+        <!-- Face Features -->
+        <circle cx="85" cy="38" r="2.5" fill="#4a3520" />
+        <circle cx="103" cy="35" r="2.5" fill="#4a3520" />
+        <ellipse cx="94" cy="43" rx="7.5" ry="4.5" fill="#ffffff" stroke="#4a3520" stroke-width="1.8" />
+        <ellipse cx="94" cy="41" rx="2.5" ry="1.8" fill="#4a3520" />
+      </g>
+
+      <!-- Semi-Realistic Golden Hour Sunlight Streaming Across Room -->
+      <polygon points="150,0 460,0 600,260 260,260" fill="url(#sunlightGlow)" style="mix-blend-mode: overlay;" pointer-events="none" />
+    </svg>
+
+    <!-- HEADER TEXT OVERLAY -->
+    <div class="hero-content">
+      <div class="hero-badge-header">
+        <span>PORTFOLIO.EXE</span>
+        <span class="pixel-hearts">♥♥♥</span>
       </div>
+      <h1 class="hero-title">A.I. FOR DESIGNERS</h1>
+      <div class="hero-subtitle">Lindsy Kate</div>
+      <div class="hero-course">ART 3041 · Fall 2026</div>
+      <div class="hero-email">
+        <a href="mailto:LINDSYKATE.ONG52@stu-mail.baruch.cuny.edu">LINDSYKATE.ONG52@stu-mail.baruch.cuny.edu</a>
+      </div>
+    </div>
+  </header>
 
-      <hr class="divider">
+  <!-- MAIN WORK LIST -->
+  <main class="content">
+    <h2 class="section-title">Course Work</h2>
+    <p class="section-subtitle">A studio portfolio exploring artificial intelligence & visual design.</p>
 
-      <nav aria-label="Course chapters">
-        <ul class="list">
-          <li>
-            <a href="#">
-              <span class="chapter">CHAPTER 01</span>
-              <span class="title">Custom Instructions</span>
-            </a>
-          </li>
-          <li>
-            <a href="#">
-              <span class="chapter">CHAPTER 02</span>
-              <span class="title">A Style Guide for Your AI</span>
-            </a>
-          </li>
-          <li>
-            <a href="enoden_biblio_kiosk.html">
-              <span class="chapter">CHAPTER 03</span>
-              <span class="title">Design a ___</span>
-            </a>
-          </li>
-          <li>
-            <a href="#">
-              <span class="chapter">CHAPTER 04</span>
-              <span class="title">Commute Story</span>
-            </a>
-          </li>
-          <li>
-            <a href="#">
-              <span class="chapter">CHAPTER 05</span>
-              <span class="title">Become a Crea(i)tive Director</span>
-            </a>
-          </li>
-          <li>
-            <a href="#">
-              <span class="chapter">CHAPTER 06</span>
-              <span class="title">Experimental AI Interface</span>
-            </a>
-          </li>
-          <li>
-            <a href="handoff.md">
-              <span class="chapter">CHAPTER 07</span>
-              <span class="title">Open</span>
-            </a>
-          </li>
-        </ul>
-      </nav>
-    </main>
-  </div>
+    <div class="work-grid">
+      <a href="#" class="work-item">
+        <span class="work-num">01</span>
+        <span class="work-title">Custom Instructions</span>
+        <span class="work-icon">🧸</span>
+      </a>
+
+      <a href="#" class="work-item">
+        <span class="work-num">02</span>
+        <span class="work-title">A Style Guide for Your AI</span>
+        <span class="work-icon">🛋️</span>
+      </a>
+
+      <a href="enoden_biblio_kiosk.html" class="work-item">
+        <span class="work-num">03</span>
+        <span class="work-title">Design a ___</span>
+        <span class="work-icon">📖</span>
+      </a>
+
+      <a href="#" class="work-item">
+        <span class="work-num">04</span>
+        <span class="work-title">Commute Story</span>
+        <span class="work-icon">☀️</span>
+      </a>
+
+      <a href="#" class="work-item">
+        <span class="work-num">05</span>
+        <span class="work-title">Become a Crea(i)tive Director</span>
+        <span class="work-icon">🎨</span>
+      </a>
+
+      <a href="#" class="work-item">
+        <span class="work-num">06</span>
+        <span class="work-title">Experimental AI Interface</span>
+        <span class="work-icon">🌿</span>
+      </a>
+
+      <a href="handoff.md" class="work-item" style="grid-column: 1 / -1;">
+        <span class="work-num">07</span>
+        <span class="work-title">Open Handoff</span>
+        <span class="work-icon">☕</span>
+      </a>
+    </div>
+  </main>
 
 </body>
 </html>
