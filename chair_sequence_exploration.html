@@ -80,7 +80,7 @@
                     <p class="text-xs text-sage-700 font-medium">9-Cell Multi-Stage Prompting Breakdown</p>
                 </div>
             </div>
-            
+
             <div class="flex items-center gap-2 bg-white/80 p-1.5 rounded-xl border border-sage-200 text-xs shadow-sm">
                 <span class="px-3 py-1.5 rounded-lg bg-sage-600 text-white font-semibold shadow-sm">Grid View</span>
                 <button class="px-3 py-1.5 text-sage-700 hover:text-sage-800 transition-colors cursor-pointer font-medium" onclick="openModal(0)">Start Presentation</button>
@@ -98,28 +98,24 @@
         <p>Interactive Visual Matrix &bull; Sequence Breakdown &bull; Render Pipeline Visualization</p>
     </footer>
 
-    <div id="lightbox-modal" onclick="handleBackdropClick(event)" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 bg-sage-800/60 backdrop-blur-md transition-opacity duration-300">
+    <div id="lightbox-modal" onclick="handleBackdropClick(event)" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 bg-sage-800/60 backdrop-blur-md transition-opacity duration-200">
         <div class="relative w-full max-w-5xl bg-[#FFFDF0] border border-sage-300 rounded-2xl overflow-hidden shadow-2xl flex flex-col md:flex-row max-h-[90vh]">
-            
-            <!-- Close Button -->
-            <button onclick="closeModal()" class="absolute top-4 right-4 z-20 w-10 h-10 flex items-center justify-center rounded-full bg-sage-100 text-sage-700 hover:text-sage-800 border border-sage-300 hover:bg-sage-200 transition-all">
+
+            <button onclick="closeModal()" class="absolute top-4 right-4 z-20 w-10 h-10 flex items-center justify-center rounded-full bg-sage-100 text-sage-700 hover:text-sage-800 border border-sage-200 shadow-md">
                 <i class="fa-solid fa-xmark text-lg"></i>
             </button>
 
-            <!-- Image View Area -->
             <div class="relative w-full md:w-2/3 bg-sage-800 flex items-center justify-center p-4 min-h-[300px] md:min-h-[500px]">
-                <img id="modal-image" src="" alt="Cell Detail" class="max-h-[70vh] w-auto max-w-full object-contain rounded-lg shadow-lg" onerror="this.onerror=null; this.src='https://placehold.co/800x800/E2EBE2/355235?text=Image+Not+Found';">
-                
-                <!-- Navigation Arrows -->
-                <button id="prev-btn" onclick="prevSlide()" class="absolute left-4 top-1/2 -translate-y-1/2 w-11 h-11 flex items-center justify-center rounded-full bg-sage-800/90 text-white border border-sage-500 hover:bg-sage-600 hover:text-white transition-all">
+                <img id="modal-image" src="" alt="Cell Detail" class="max-h-[70vh] w-auto max-w-full object-contain rounded-lg shadow-lg" onerror="this.onerror=null; this.src='https://placehold.co/1200x800/efefef/333333?text=Image+Not+Found';">
+
+                <button id="prev-btn" onclick="prevSlide()" class="absolute left-4 top-1/2 -translate-y-1/2 w-11 h-11 flex items-center justify-center rounded-full bg-sage-800/90 text-white border border-sage-300 shadow-lg hover:bg-sage-700 transition-colors">
                     <i class="fa-solid fa-chevron-left"></i>
                 </button>
-                <button id="next-btn" onclick="nextSlide()" class="absolute right-4 top-1/2 -translate-y-1/2 w-11 h-11 flex items-center justify-center rounded-full bg-sage-800/90 text-white border border-sage-500 hover:bg-sage-600 hover:text-white transition-all">
+                <button id="next-btn" onclick="nextSlide()" class="absolute right-4 top-1/2 -translate-y-1/2 w-11 h-11 flex items-center justify-center rounded-full bg-sage-800/90 text-white border border-sage-300 shadow-lg hover:bg-sage-700 transition-colors">
                     <i class="fa-solid fa-chevron-right"></i>
                 </button>
             </div>
 
-            <!-- Details Sidebar -->
             <div class="w-full md:w-1/3 p-6 sm:p-8 flex flex-col justify-between border-t md:border-t-0 md:border-l border-sage-200 bg-[#FFFDF0] overflow-y-auto">
                 <div>
                     <div class="flex items-center justify-between mb-4">
@@ -147,7 +143,7 @@
                 </div>
 
                 <div class="pt-6 mt-6 border-t border-sage-200 flex items-center justify-between text-xs text-sage-700">
-                    <span>Use <kbd class="px-1.5 py-0.5 bg-sage-100 rounded border border-sage-300 text-sage-800">←</kbd> <kbd class="px-1.5 py-0.5 bg-sage-100 rounded border border-sage-300 text-sage-800">→</kbd> to navigate</span>
+                    <span>Use <kbd class="px-1.5 py-0.5 bg-sage-100 rounded border border-sage-300 text-sage-800">←</kbd> <kbd class="px-1.5 py-0.5 bg-sage-100 rounded border border-sage-300 text-sage-800">→</kbd></span>
                     <span><kbd class="px-1.5 py-0.5 bg-sage-100 rounded border border-sage-300 text-sage-800">ESC</kbd> to close</span>
                 </div>
             </div>
@@ -161,63 +157,63 @@
                 title: "The Bare Prompt",
                 generator: "Gemini",
                 prompt: "I'm going to give you a series of image prompts. starting simple and building up. don't add anything. here is my first prompt: a chair in the middle of a room.",
-                image: "Gemini_Generated_Image_j5u1mfj5u1mfj5u1.jpg"
+                image: "cell01.jpg"
             },
             {
                 id: "02",
                 title: "Adjectives & Material",
                 generator: "Gemini",
                 prompt: "a popcorn chair in the middle of a theater room",
-                image: "Gemini_Generated_Image_whm48uwhm48uwhm4.jpg"
+                image: "cell02.jpg"
             },
             {
                 id: "03",
                 title: "The Setting & Mood",
                 generator: "Gemini",
-                prompt: "a popcorn chair front facing in the middle of a theater room when its nighttime there are no other objects and giving vintage vibes that looks more like a chair and the walls are clean and 90's like and gives the vibe of an old movie theater",
-                image: "Gemini_Generated_Image_1a8xzc1a8xzc1a8x (1).jpg"
+                prompt: "a popcorn chair front facing in the middle of a theater room when its nighttime there are no other objects and giving vintage vibes that looks more like a chair and the whole room should feel cinematic but still minimal.",
+                image: "cell03.jpg"
             },
             {
                 id: "04",
                 title: "Refining Form & Details",
                 generator: "Gemini",
-                prompt: "a popcorn chair front facing in the middle of a theater room when its nighttime there are no other objects and giving vintage vibes that looks more like a chair and the walls are clean and 90's like and gives the vibe of an old movie theater",
-                image: "Gemini_Generated_Image_z6ushyz6ushyz6us.jpg"
+                prompt: "a popcorn chair front facing in the middle of a theater room when its nighttime there are no other objects and giving vintage vibes that looks more like a chair and the whole room should feel cinematic but still minimal.",
+                image: "cell04.jpg"
             },
             {
                 id: "05",
                 title: "The Camera & Optics",
                 generator: "Gemini",
                 prompt: "shot from the right corner of the room with a zoom on the side of the chair 16:9 format f stop 1.2",
-                image: "Gemini_Generated_Image_wv32i4wv32i4wv32.jpg"
+                image: "cell05.jpg"
             },
             {
                 id: "06",
                 title: "The Reference, Marked Up",
                 generator: "Gemini",
                 prompt: "make the view/angle top angle like the image I provided",
-                image: "4e8b442b-9005-42d9-a01e-ec911af9c58f.jpg"
+                image: "cell06.jpg"
             },
             {
                 id: "07",
                 title: "What Came Back",
                 generator: "Gemini",
                 prompt: "Top-down spatial re-projection into warm theater lounge floor context.",
-                image: "Gemini_Generated_Image_fvl4nafvl4nafvl4.jpg"
+                image: "cell07.jpg"
             },
             {
                 id: "08",
                 title: "The Same Prompt, A Different Generator",
                 generator: "base44",
                 prompt: "Full 90° bird's-eye prompt translation tailored for multi-model synthesis.",
-                image: "0dc16ffc5_generated_image.webp"
+                image: "cell08.jpg"
             },
             {
                 id: "09",
                 title: "Another Pass & Refinement",
                 generator: "Gemini",
                 prompt: "Direct orthographic bird's-eye alignment over patterned vintage theater carpet.",
-                image: "Gemini_Generated_Image_ij9cwuij9cwuij9c.jpg"
+                image: "cell09.jpg"
             }
         ];
 
@@ -226,11 +222,11 @@
         function renderGrid() {
             const container = document.getElementById('grid-container');
             container.innerHTML = cellSequence.map((cell, index) => `
-                <article onclick="openModal(${index})" class="card-glow group bg-[#FBF5DF] border border-sage-200 hover:border-sage-500 rounded-2xl overflow-hidden transition-all duration-300 cursor-pointer flex flex-col justify-between shadow-sm hover:shadow-md">
+                <article onclick="openModal(${index})" class="card-glow group bg-[#FBF5DF] border border-sage-200 hover:border-sage-500 rounded-2xl overflow-hidden transition-all duration-300 cursor-pointer">
                     <div>
                         <div class="relative aspect-[16/10] sm:aspect-square bg-sage-100 overflow-hidden border-b border-sage-200">
-                            <img src="${cell.image}" alt="${cell.title}" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" onerror="this.onerror=null; this.src='https://placehold.co/800x800/E2EBE2/355235?text=Cell+${cell.id}';">
-                            <div class="absolute inset-0 bg-gradient-to-t from-sage-800/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end justify-between p-4">
+                            <img src="${cell.image}" alt="${cell.title}" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" onerror="this.onerror=null; this.src='https://placehold.co/1200x800/efefef/333333?text=Image+Not+Found';">
+                            <div class="absolute inset-0 bg-gradient-to-t from-sage-800/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end justify-start p-4">
                                 <span class="text-xs font-semibold text-white bg-sage-800/80 px-3 py-1 rounded-full border border-sage-300/40">
                                     <i class="fa-solid fa-magnifying-glass-plus mr-1"></i> Inspect
                                 </span>
@@ -238,7 +234,7 @@
                             <span class="absolute top-3 left-3 bg-white/90 border border-sage-200 text-sage-800 font-mono text-xs px-2.5 py-1 rounded-md font-bold backdrop-blur-md shadow-sm">
                                 Cell ${cell.id}
                             </span>
-                            <span class="absolute top-3 right-3 ${cell.generator === 'base44' ? 'bg-sage-600 text-white font-bold' : 'bg-white/90 text-sage-800 border border-sage-200'} font-mono text-[10px] px-2 py-0.5 rounded backdrop-blur-md shadow-sm">
+                            <span class="absolute top-3 right-3 ${cell.generator === 'base44' ? 'bg-sage-600 text-white font-bold' : 'bg-white/90 text-sage-800 border border-sage-200'} font-mono text-xs px-2.5 py-1 rounded-md border backdrop-blur-md shadow-sm">
                                 ${cell.generator}
                             </span>
                         </div>
