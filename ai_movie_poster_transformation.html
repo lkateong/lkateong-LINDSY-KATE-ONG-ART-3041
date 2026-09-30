@@ -154,6 +154,114 @@
             background: #f0f5f0;
             box-shadow: 0 6px 20px rgba(103, 146, 103, 0.45);
         }
+
+        /* Clickable Image Styles */
+        .clickable-image {
+            cursor: pointer;
+            transition: transform 0.2s ease;
+        }
+
+        .clickable-image:hover {
+            transform: scale(1.02);
+        }
+
+        /* Modal/Lightbox Styles */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(4px);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes scaleIn {
+            from {
+                transform: scale(0.9);
+                opacity: 0;
+            }
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .modal-content {
+            position: relative;
+            max-width: 90vw;
+            max-height: 90vh;
+            background: #faf7f2;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            animation: scaleIn 0.3s ease;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .modal-image {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            max-height: calc(90vh - 60px);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 20px;
+            border-bottom: 1px solid #d2e0d2;
+            background: rgba(253, 251, 247, 0.95);
+        }
+
+        .modal-title {
+            font-size: 14px;
+            font-weight: 500;
+            color: #2b2a27;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            color: #679267;
+            cursor: pointer;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+            border-radius: 6px;
+        }
+
+        .modal-close:hover {
+            background: rgba(103, 146, 103, 0.1);
+            color: #547854;
+        }
     </style>
 </head>
 <body class="min-h-screen relative flex flex-col justify-between selection:bg-sage-border selection:text-warmCharcoal">
@@ -164,6 +272,22 @@
 
     <!-- Background Particle Canvas -->
     <canvas id="particleCanvas"></canvas>
+
+    <!-- Modal/Lightbox for Enlarged Images -->
+    <div id="imageModal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title" id="modalTitle">
+                    <i data-lucide="image" class="w-4 h-4"></i>
+                    <span id="modalTitleText">View Image</span>
+                </div>
+                <button class="modal-close" onclick="closeImageModal()">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+            <img id="modalImage" class="modal-image" src="" alt="Enlarged View">
+        </div>
+    </div>
 
     <header class="relative z-10 pt-10 pb-5 px-4 text-center">
         <div class="max-w-2xl mx-auto space-y-3">
@@ -184,7 +308,7 @@
         <!-- View Mode Switcher -->
         <div class="flex items-center justify-center">
             <div class="inline-flex items-center gap-1.5 cream-panel p-1.5 rounded-xl text-xs border border-sage-border">
-                <button onclick="switchView('slider')" id="tabSlider" class="px-3.5 py-1.5 rounded-lg bg-sage hover:bg-sage-hover text-white font-medium transition-all flex items-center gap-1.5 shadow-sm">
+                <button onclick="switchView('slider')" id="tabSlider" class="px-3.5 py-1.5 rounded-lg bg-sage hover:bg-sage-hover text-white font-medium transition-all flex items-center gap-1.5">
                     <i data-lucide="sliders" class="w-3.5 h-3.5"></i> Interactive Slider
                 </button>
                 <button onclick="switchView('side')" id="tabSide" class="px-3.5 py-1.5 rounded-lg text-warmMuted hover:text-sage transition-all flex items-center gap-1.5">
@@ -200,14 +324,14 @@
         </div>
 
         <div id="viewSliderContainer" class="cream-panel cream-panel-hover p-3 sm:p-5 rounded-2xl max-w-md mx-auto">
-            <div class="slider-container rounded-xl aspect-[3/4] w-full border border-sage-border relative shadow-inner bg-stone-100" id="mainSlider">
+            <div class="slider-container rounded-xl aspect-[3/4] w-full border border-sage-border relative shadow-inner bg-stone-100 cursor-pointer" id="mainSlider" onclick="handleSliderClick(event)">
                 
                 <!-- Final Poster (Base Image) -->
-                <img id="imgFinal" src="final.png" alt="Final AI Poster" class="w-full h-full object-cover rounded-xl" onerror="this.src='https://placehold.co/800x1100/faf7f2/679267?text=Final+Poster'">
+                <img id="imgFinal" src="final.png" alt="Final AI Poster" class="w-full h-full object-cover rounded-xl clickable-image" onerror="this.src='https://placehold.co/800x1100/faf7f2/679267?text=Final+Poster'" onclick="openImageModal('final.png', 'Final AI Poster')">
                 
                 <!-- Sketch Image Layer (Clipped) -->
                 <div class="slider-before" id="sliderBeforeLayer">
-                    <img id="imgSketch" src="sketch.jpg" alt="Concept Sketch" class="h-full object-cover max-w-none rounded-xl" onerror="this.src='https://placehold.co/800x1100/faf7f2/679267?text=Initial+Sketch'">
+                    <img id="imgSketch" src="sketch.jpg" alt="Concept Sketch" class="h-full object-cover max-w-none rounded-xl clickable-image" onerror="this.src='https://placehold.co/800x1100/faf7f2/679267?text=Initial+Sketch'" onclick="openImageModal(event)">
                 </div>
 
                 <!-- Drag Handle -->
@@ -234,7 +358,7 @@
                     <span class="text-[10px] text-warmMuted font-mono uppercase bg-stone-100 px-2 py-0.5 rounded border border-warmBorder">Original</span>
                 </div>
                 <div class="aspect-[3/4] rounded-xl overflow-hidden border border-warmBorder relative bg-stone-100">
-                    <img src="sketch.jpg" alt="Concept Sketch" class="w-full h-full object-cover" onerror="this.src='https://placehold.co/800x1100/faf7f2/679267?text=Initial+Sketch'">
+                    <img src="sketch.jpg" alt="Concept Sketch" class="w-full h-full object-cover clickable-image" onerror="this.src='https://placehold.co/800x1100/faf7f2/679267?text=Initial+Sketch'" onclick="openImageModal('sketch.jpg', 'Concept Sketch')">
                 </div>
             </div>
 
@@ -244,7 +368,7 @@
                     <span class="text-[10px] text-sage font-mono uppercase bg-sage-light px-2 py-0.5 rounded border border-sage-border">AI Rendered</span>
                 </div>
                 <div class="aspect-[3/4] rounded-xl overflow-hidden border border-sage-border relative bg-stone-100">
-                    <img src="final.png" alt="Final Poster" class="w-full h-full object-cover" onerror="this.src='https://placehold.co/800x1100/f4efe6/679267?text=Final+Poster'">
+                    <img src="final.png" alt="Final Poster" class="w-full h-full object-cover clickable-image" onerror="this.src='https://placehold.co/800x1100/f4efe6/679267?text=Final+Poster'" onclick="openImageModal('final.png', 'Final AI Poster')">
                 </div>
             </div>
         </div>
@@ -297,6 +421,58 @@
 
     <script>
         lucide.createIcons();
+
+        // Modal/Lightbox Functions
+        function openImageModal(srcOrEvent, title) {
+            const modal = document.getElementById('imageModal');
+            const modalImage = document.getElementById('modalImage');
+            const modalTitleText = document.getElementById('modalTitleText');
+            
+            let src, imageTitle;
+            
+            // Handle both direct calls with src/title and event calls from sketch layer
+            if (typeof srcOrEvent === 'string') {
+                src = srcOrEvent;
+                imageTitle = title;
+            } else {
+                // Event call from sketch image
+                srcOrEvent.stopPropagation();
+                src = srcOrEvent.target.src;
+                imageTitle = srcOrEvent.target.alt || 'View Image';
+            }
+            
+            modalImage.src = src;
+            modalTitleText.textContent = imageTitle;
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeImageModal() {
+            const modal = document.getElementById('imageModal');
+            modal.classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+
+        // Close modal when clicking outside the content
+        document.getElementById('imageModal').addEventListener('click', (e) => {
+            if (e.target.id === 'imageModal') {
+                closeImageModal();
+            }
+        });
+
+        // Close modal with Escape key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                closeImageModal();
+            }
+        });
+
+        function handleSliderClick(event) {
+            // Don't trigger if clicking on an image or the slider handle
+            if (event.target.closest('img') || event.target.closest('#sliderHandle')) {
+                return;
+            }
+        }
 
         // 1. View Switcher logic
         function switchView(mode) {
@@ -376,7 +552,7 @@
             });
 
             container.addEventListener('click', (e) => {
-                if (e.target.closest('#sliderHandle')) return;
+                if (e.target.closest('#sliderHandle') || e.target.closest('img')) return;
                 setPos(e.clientX);
             });
         }
