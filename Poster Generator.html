@@ -1,0 +1,1038 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modular Vector Poster Generator Engine (7:11)</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@700&family=Inter:wght@400;600;800&family=Lexend:wght@400;600&family=Plus+Jakarta+Sans:wght@500;700&family=Righteous&family=Space+Grotesk:wght@500;700&family=Space+Mono:wght@400;700&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Pure Vector Libraries: jsPDF & opentype.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/opentype.js/1.3.4/opentype.min.js"></script>
+
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0f1117;
+            color: #e2e8f0;
+        }
+
+        /* Custom scrollbar for dark UI controls */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #1e293b;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #475569;
+            border-radius: 3px;
+        }
+
+        /* Dynamic font classes */
+        .font-syne { font-family: 'Syne', sans-serif; }
+        .font-righteous { font-family: 'Righteous', cursive; }
+        .font-comfortaa { font-family: 'Comfortaa', cursive; }
+        .font-space-grotesk { font-family: 'Space Grotesk', sans-serif; }
+        .font-jakarta { font-family: 'Plus Jakarta Sans', sans-serif; }
+        .font-lexend { font-family: 'Lexend', sans-serif; }
+        .font-space-mono { font-family: 'Space Mono', monospace; }
+        .font-inter { font-family: 'Inter', sans-serif; }
+
+        /* Poster viewport shadow & styling */
+        #poster-viewport {
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.85);
+            transition: background-color 0.2s ease, color 0.2s ease, aspect-ratio 0.3s ease, max-width 0.3s ease;
+        }
+
+        .aspect-7-11 { aspect-ratio: 7 / 11; }
+        .aspect-11-7 { aspect-ratio: 11 / 7; }
+
+        .border-dashed-accent { border-style: dashed; }
+
+        /* Smooth CSS pulse for vector indicator */
+        @keyframes pulseGlow {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(0.9); }
+        }
+        .animate-pulse-glow {
+            animation: pulseGlow 2s infinite ease-in-out;
+        }
+    </style>
+</head>
+<body class="h-screen overflow-hidden flex flex-col md:flex-row">
+
+    <!-- LEFT SIDEBAR: CONTROL PANEL -->
+    <aside class="w-full md:w-96 bg-slate-900 border-b md:border-b-0 md:border-r border-slate-800 flex flex-col h-full z-20 shadow-xl flex-shrink-0">
+        <!-- Header -->
+        <div class="p-4 border-b border-slate-800 flex items-center justify-between bg-slate-950/50">
+            <div class="flex items-center gap-2">
+                <div class="w-3 h-3 rounded-full bg-blue-600 animate-pulse-glow"></div>
+                <h1 class="font-bold text-sm tracking-wider uppercase text-slate-200">Vector Engine</h1>
+            </div>
+            <span id="badge-header-format" class="text-[10px] bg-blue-900/50 text-blue-300 border border-blue-700/50 px-2 py-0.5 rounded font-mono">7:11 Portrait</span>
+        </div>
+
+        <!-- Scrollable Control Panel -->
+        <div class="flex-1 overflow-y-auto p-4 space-y-6 text-xs">
+            
+            <!-- PARAMETRIC GENERATIVE ENGINE -->
+            <div class="bg-gradient-to-br from-indigo-900/40 via-purple-900/20 to-slate-900 p-3.5 rounded-xl border border-indigo-500/30 space-y-3 shadow-lg">
+                <div class="flex items-center justify-between">
+                    <span class="font-bold text-indigo-300 uppercase tracking-wider text-[11px] flex items-center gap-1.5">
+                        <i class="fa-solid fa-dice text-indigo-400 text-sm"></i> Generative Design Engine
+                    </span>
+                    <span class="text-[9px] bg-indigo-950 text-indigo-300 px-1.5 py-0.5 rounded border border-indigo-800/60 font-mono">Pure Vector</span>
+                </div>
+                <p class="text-[10px] text-slate-400 leading-normal">
+                    Mutates design layout and vector geometries while locking text inputs.
+                </p>
+                <button id="btn-generate-random" class="w-full bg-gradient-to-r from-indigo-600 to-blue-600 hover:from-indigo-500 hover:to-blue-500 text-white font-bold py-2.5 px-3 rounded-lg shadow-md transition flex items-center justify-center gap-2 text-xs uppercase tracking-wider">
+                    <i class="fa-solid fa-wand-magic-sparkles"></i> Mutate Composition
+                </button>
+            </div>
+
+            <!-- VECTOR EXPORT OPTIONS -->
+            <div class="bg-slate-800/80 p-3 rounded-lg border border-slate-700 space-y-2.5">
+                <span class="font-bold text-slate-300 uppercase text-[10px] tracking-wider block flex items-center gap-1.5">
+                    <i class="fa-solid fa-bezier-curve text-blue-400"></i> Vector Export Settings
+                </span>
+                <p class="text-[9.5px] text-slate-400">Exports strictly valid, well-grouped pure SVG &amp; PDF layers with layout boxes, text, and graphics included.</p>
+            </div>
+
+            <!-- ASPECT RATIO SELECTOR -->
+            <div class="space-y-3">
+                <label class="font-semibold text-slate-400 uppercase text-[10px] tracking-wider block">Format & Aspect Ratio</label>
+                <div class="grid grid-cols-2 gap-2">
+                    <button id="btn-ratio-7-11" class="bg-blue-600/30 hover:bg-blue-600/50 border border-blue-500 text-blue-200 py-2 px-3 rounded text-left transition flex items-center justify-between">
+                        <div>
+                            <span class="font-bold block">7 : 11</span>
+                            <span class="text-[9px] text-blue-300 opacity-80">Portrait</span>
+                        </div>
+                        <i class="fa-solid fa-file-lines text-sm"></i>
+                    </button>
+                    <button id="btn-ratio-11-7" class="bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-300 py-2 px-3 rounded text-left transition flex items-center justify-between">
+                        <div>
+                            <span class="font-bold block">11 : 7</span>
+                            <span class="text-[9px] text-slate-400 opacity-80">Landscape</span>
+                        </div>
+                        <i class="fa-solid fa-vector-square text-sm"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- PALETTE & PRESETS -->
+            <div class="space-y-3 pt-3 border-t border-slate-800">
+                <label class="font-semibold text-slate-400 uppercase text-[10px] tracking-wider block">Palette & Presets</label>
+                <div class="grid grid-cols-2 gap-2">
+                    <button id="btn-preset-liquid" class="bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-300 py-2 px-3 rounded text-left transition flex items-center justify-between">
+                        <span class="font-medium">Liquid Blue</span>
+                        <i class="fa-solid fa-wand-magic-sparkles text-xs"></i>
+                    </button>
+                    <button id="btn-preset-monochrome" class="bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-300 py-2 px-3 rounded text-left transition flex items-center justify-between">
+                        <span class="font-medium">Mono Dark</span>
+                        <i class="fa-solid fa-circle-half-stroke text-xs"></i>
+                    </button>
+                </div>
+
+                <div class="flex items-center gap-3 pt-2">
+                    <div class="flex-1">
+                        <label class="text-[11px] text-slate-400 block mb-1">Background</label>
+                        <div class="flex items-center gap-2 bg-slate-800 p-1.5 rounded border border-slate-700">
+                            <input type="color" id="input-bg-color" value="#0000FF" class="w-6 h-6 rounded cursor-pointer border-0 bg-transparent">
+                            <input type="text" id="text-bg-color" value="#0000FF" class="bg-transparent w-full text-slate-200 uppercase font-mono text-[11px] focus:outline-none">
+                        </div>
+                    </div>
+                    <div class="flex-1">
+                        <label class="text-[11px] text-slate-400 block mb-1">Foreground Ink</label>
+                        <div class="flex items-center gap-2 bg-slate-800 p-1.5 rounded border border-slate-700">
+                            <input type="color" id="input-fg-color" value="#F2F2EC" class="w-6 h-6 rounded cursor-pointer border-0 bg-transparent">
+                            <input type="text" id="text-fg-color" value="#F2F2EC" class="bg-transparent w-full text-slate-200 uppercase font-mono text-[11px] focus:outline-none">
+                        </div>
+                    </div>
+                    <button id="btn-invert-color" title="Invert Colors" class="self-end mb-0.5 p-2 bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-300 rounded transition">
+                        <i class="fa-solid fa-right-left"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- LAYOUT & GRID ARCHITECTURE -->
+            <div class="space-y-3 pt-3 border-t border-slate-800">
+                <label class="font-semibold text-slate-400 uppercase text-[10px] tracking-wider block">Grid Architecture</label>
+                
+                <div>
+                    <div class="flex justify-between text-[11px] mb-1">
+                        <span id="label-split-ratio" class="text-slate-300">Artwork Zone Ratio</span>
+                        <span id="val-artwork-split" class="font-mono text-blue-400">62% / 38%</span>
+                    </div>
+                    <input type="range" id="slider-artwork-split" min="30" max="75" value="62" class="w-full accent-blue-500 bg-slate-800 h-1.5 rounded-lg appearance-none cursor-pointer">
+                </div>
+
+                <div>
+                    <div class="flex justify-between text-[11px] mb-1">
+                        <span class="text-slate-300">Outer Frame Padding</span>
+                        <span id="val-grid-margin" class="font-mono text-blue-400">16px</span>
+                    </div>
+                    <input type="range" id="slider-grid-margin" min="8" max="32" value="16" class="w-full accent-blue-500 bg-slate-800 h-1.5 rounded-lg appearance-none cursor-pointer">
+                </div>
+
+                <div>
+                    <div class="flex justify-between text-[11px] mb-1">
+                        <span class="text-slate-300">Border Thickness</span>
+                        <span id="val-border-width" class="font-mono text-blue-400">1px</span>
+                    </div>
+                    <input type="range" id="slider-border-width" min="1" max="5" value="1" class="w-full accent-blue-500 bg-slate-800 h-1.5 rounded-lg appearance-none cursor-pointer">
+                </div>
+
+                <div>
+                    <div class="flex justify-between text-[11px] mb-1">
+                        <span class="text-slate-300">Top Grid Cell Split (H1 / H2)</span>
+                        <span id="val-row1-split" class="font-mono text-blue-400">45% / 55%</span>
+                    </div>
+                    <input type="range" id="slider-row1-split" min="20" max="80" value="45" class="w-full accent-blue-500 bg-slate-800 h-1.5 rounded-lg appearance-none cursor-pointer">
+                </div>
+            </div>
+
+            <!-- VECTOR ARTWORK GENERATOR -->
+            <div class="space-y-3 pt-3 border-t border-slate-800">
+                <div class="flex items-center justify-between">
+                    <label class="font-semibold text-slate-400 uppercase text-[10px] tracking-wider block">Fluid Vector Math</label>
+                    <button id="btn-randomize-art" class="text-[10px] text-blue-400 hover:text-blue-300 flex items-center gap-1">
+                        <i class="fa-solid fa-rotate"></i> Regenerate
+                    </button>
+                </div>
+
+                <div>
+                    <div class="flex justify-between text-[11px] mb-1">
+                        <span class="text-slate-300">Tendril Curves</span>
+                        <span id="val-art-complexity" class="font-mono text-blue-400">6</span>
+                    </div>
+                    <input type="range" id="slider-art-complexity" min="3" max="12" value="6" class="w-full accent-blue-500 bg-slate-800 h-1.5 rounded-lg appearance-none cursor-pointer">
+                </div>
+
+                <div>
+                    <div class="flex justify-between text-[11px] mb-1">
+                        <span class="text-slate-300">Curvature Distortion</span>
+                        <span id="val-art-distortion" class="font-mono text-blue-400">1.2</span>
+                    </div>
+                    <input type="range" id="slider-art-distortion" min="0.5" max="2.5" step="0.1" value="1.2" class="w-full accent-blue-500 bg-slate-800 h-1.5 rounded-lg appearance-none cursor-pointer">
+                </div>
+
+                <div class="flex items-center justify-between pt-1">
+                    <span class="text-slate-300 text-[11px]">Animate Canvas Motion</span>
+                    <label class="relative inline-flex items-center cursor-pointer">
+                        <input type="checkbox" id="check-animate-art" checked class="sr-only peer">
+                        <div class="w-9 h-5 bg-slate-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-slate-300 after:border-slate-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-blue-600"></div>
+                    </label>
+                </div>
+            </div>
+
+            <!-- TYPOGRAPHY CONTROLS -->
+            <div class="space-y-3 pt-3 border-t border-slate-800">
+                <label class="font-semibold text-slate-400 uppercase text-[10px] tracking-wider block">Typographic Scale & Fonts</label>
+
+                <div>
+                    <label class="text-[11px] text-slate-300 block mb-1">H1 Display Typeface</label>
+                    <select id="select-h1-font" class="w-full bg-slate-800 border border-slate-700 text-slate-200 rounded p-1.5 text-[11px] focus:outline-none focus:border-blue-500">
+                        <option value="font-syne" selected>Syne (Wide Heavy)</option>
+                        <option value="font-righteous">Righteous (Geometric Display)</option>
+                        <option value="font-comfortaa">Comfortaa (Rounded)</option>
+                        <option value="font-space-grotesk">Space Grotesk (Tech Sans)</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label class="text-[11px] text-slate-300 block mb-1">H2 / Metadata Typeface</label>
+                    <select id="select-h2-font" class="w-full bg-slate-800 border border-slate-700 text-slate-200 rounded p-1.5 text-[11px] focus:outline-none focus:border-blue-500">
+                        <option value="font-space-grotesk" selected>Space Grotesk</option>
+                        <option value="font-jakarta">Plus Jakarta Sans</option>
+                        <option value="font-lexend">Lexend</option>
+                        <option value="font-inter">Inter</option>
+                        <option value="font-space-mono">Space Mono</option>
+                    </select>
+                </div>
+
+                <div>
+                    <div class="flex justify-between text-[11px] mb-1">
+                        <span class="text-slate-300">Font Scale Multiplier</span>
+                        <span id="val-font-scale" class="font-mono text-blue-400">1.0x</span>
+                    </div>
+                    <input type="range" id="slider-font-scale" min="0.7" max="1.5" step="0.05" value="1.0" class="w-full accent-blue-500 bg-slate-800 h-1.5 rounded-lg appearance-none cursor-pointer">
+                </div>
+            </div>
+
+            <!-- CONTENT EDITING -->
+            <div class="space-y-3 pt-3 border-t border-slate-800">
+                <label class="font-semibold text-slate-400 uppercase text-[10px] tracking-wider block">Content Editor</label>
+
+                <div>
+                    <label class="text-[11px] text-slate-300 block mb-1">H1 Title (Line 1 / Line 2)</label>
+                    <textarea id="input-h1-text" rows="2" class="w-full bg-slate-800 border border-slate-700 text-slate-200 rounded p-1.5 text-[11px] focus:outline-none focus:border-blue-500 font-mono">LIQUID&#10;LIQUID</textarea>
+                </div>
+
+                <div>
+                    <label class="text-[11px] text-slate-300 block mb-1">H2 Lineup / Performers</label>
+                    <textarea id="input-h2-text" rows="3" class="w-full bg-slate-800 border border-slate-700 text-slate-200 rounded p-1.5 text-[11px] focus:outline-none focus:border-blue-500 font-mono">With: Pink Skull, Dave P, Dave Pak, Mike Z, Russ Alexander, Joel, Nez, Steve Vena, Adam Sparkles, Julian S. Process & Broadzilla</textarea>
+                </div>
+
+                <div>
+                    <label class="text-[11px] text-slate-300 block mb-1">Body / Venue & Time</label>
+                    <textarea id="input-body-text" rows="3" class="w-full bg-slate-800 border border-slate-700 text-slate-200 rounded p-1.5 text-[11px] focus:outline-none focus:border-blue-500 font-mono">9pm - 3:30am, Saturday May 23rd, 2010&#10;At Voyeur, 1221 St. James St. Philadelphia, PA&#10;$12 advance $15 door. Details: www.igetrvng.com</textarea>
+                </div>
+
+                <div>
+                    <label class="text-[11px] text-slate-300 block mb-1">Accent Stamp Text</label>
+                    <textarea id="input-stamp-text" rows="2" class="w-full bg-slate-800 border border-slate-700 text-slate-200 rounded p-1.5 text-[11px] focus:outline-none focus:border-blue-500 font-mono">2000 ---------- 2010&#10;------Making Time------</textarea>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- EXPORT FOOTER -->
+        <div class="p-4 border-t border-slate-800 bg-slate-950/80 grid grid-cols-2 gap-2">
+            <button id="btn-export-svg" class="bg-indigo-600 hover:bg-indigo-500 text-white font-medium py-2.5 px-3 rounded-lg flex items-center justify-center gap-2 transition shadow-lg shadow-indigo-900/30">
+                <i class="fa-solid fa-file-code text-indigo-200"></i> Pure SVG
+            </button>
+            <button id="btn-export-pdf" class="bg-blue-600 hover:bg-blue-500 text-white font-medium py-2.5 px-3 rounded-lg flex items-center justify-center gap-2 transition shadow-lg shadow-blue-900/30">
+                <i class="fa-solid fa-file-pdf text-blue-200"></i> Pure Vector PDF
+            </button>
+        </div>
+    </aside>
+
+    <!-- MAIN WORKSPACE -->
+    <main class="flex-1 bg-slate-950 flex flex-col items-center justify-center p-4 md:p-8 overflow-auto relative">
+        
+        <!-- Top Toolbar -->
+        <div class="absolute top-4 left-4 right-4 flex items-center justify-between text-slate-400 text-xs pointer-events-none z-10">
+            <div class="flex items-center gap-2 bg-slate-900/90 backdrop-blur border border-slate-800 px-3 py-1.5 rounded-full pointer-events-auto">
+                <i class="fa-solid fa-expand text-blue-400"></i>
+                <span id="badge-ratio-indicator" class="font-mono text-[11px]">Format: 7:11 Portrait</span>
+            </div>
+            <div class="hidden sm:flex items-center gap-2 bg-slate-900/90 backdrop-blur border border-slate-800 px-3 py-1.5 rounded-full pointer-events-auto">
+                <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                <span class="font-mono text-[11px]">Vector Engine Active</span>
+            </div>
+        </div>
+
+        <!-- Poster Viewport -->
+        <div id="poster-viewport" class="w-full max-w-[560px] aspect-7-11 bg-[#0000FF] text-[#F2F2EC] flex flex-col relative overflow-hidden my-auto rounded-sm select-none">
+            
+            <!-- ARTWORK ZONE -->
+            <div id="zone-artwork" class="relative overflow-hidden flex items-center justify-center w-full" style="height: 62%;">
+                <svg id="svg-fluid-canvas" class="w-full h-full" viewBox="0 0 700 1100" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+                    <!-- Dynamic Vector Paths -->
+                </svg>
+            </div>
+
+            <!-- MODULAR GRID ZONE -->
+            <div id="zone-grid-wrapper" class="w-full flex-1 p-4 flex flex-col justify-stretch" style="height: 38%;">
+                <div id="grid-main-box" class="w-full h-full border border-current flex flex-col">
+                    
+                    <!-- ROW 1 -->
+                    <div id="grid-row-1" class="flex-1 flex border-b border-current overflow-hidden">
+                        <div id="cell-h1" class="border-r border-current p-2.5 flex items-center justify-start overflow-hidden" style="width: 45%;">
+                            <h1 id="poster-h1-text" class="font-syne font-extrabold uppercase leading-[0.88] tracking-tight text-balance break-words flex flex-col" style="font-size: 2.2rem;">
+                                <span>LIQUID</span>
+                                <span class="inline-block transform -scale-y-100 opacity-80 origin-center">LIQUID</span>
+                            </h1>
+                        </div>
+                        <div id="cell-h2" class="p-2.5 flex flex-col justify-start overflow-hidden leading-tight" style="width: 55%;">
+                            <div id="poster-h2-text" class="font-space-grotesk font-bold uppercase tracking-wider text-[11px] whitespace-pre-line break-words">
+                                With: Pink Skull, Dave P, Dave Pak, Mike Z, Russ Alexander, Joel, Nez, Steve Vena, Adam Sparkles, Julian S. Process & Broadzilla
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ROW 2 -->
+                    <div id="grid-row-2" class="h-1/2 flex overflow-hidden">
+                        <div id="cell-body" class="border-r border-current p-2.5 flex flex-col justify-center overflow-hidden" style="width: 60%;">
+                            <p id="poster-body-text" class="font-space-grotesk font-medium leading-snug text-[10px] whitespace-pre-line opacity-95">
+                                9pm - 3:30am, Saturday May 23rd, 2010
+                                At Voyeur, 1221 St. James St. Philadelphia, PA
+                                $12 advance $15 door. Details: www.igetrvng.com
+                            </p>
+                        </div>
+                        <div id="cell-stamp" class="p-2 flex items-center justify-center overflow-hidden" style="width: 40%;">
+                            <div id="stamp-dashed-box" class="w-full h-full border border-dashed-accent border-current flex flex-col items-center justify-center p-1 text-center">
+                                <span id="poster-stamp-text" class="font-space-mono font-bold text-[9px] uppercase tracking-wider whitespace-pre-line leading-tight">
+                                    2000 ---------- 2010
+                                    Making Time
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+
+    </main>
+
+    <!-- JAVASCRIPT LOGIC -->
+    <script>
+        // Helper
+        function escapeXml(unsafe) {
+            return String(unsafe).replace(/[<>&'"]/g, function (c) {
+                switch (c) {
+                    case '<': return '&lt;';
+                    case '>': return '&gt;';
+                    case '&': return '&amp;';
+                    case '\'': return '&apos;';
+                    case '"': return '&quot;';
+                }
+            });
+        }
+
+        // Font Family Map for SVG Rendering
+        const FONT_MAP = {
+            'font-syne': 'Syne, sans-serif',
+            'font-righteous': 'Righteous, cursive',
+            'font-comfortaa': 'Comfortaa, cursive',
+            'font-space-grotesk': 'Space Grotesk, sans-serif',
+            'font-jakarta': 'Plus Jakarta Sans, sans-serif',
+            'font-lexend': 'Lexend, sans-serif',
+            'font-inter': 'Inter, sans-serif',
+            'font-space-mono': 'Space Mono, monospace'
+        };
+
+        // State
+        const state = {
+            aspectRatio: '7:11',
+            bgColor: '#0000FF',
+            fgColor: '#F2F2EC',
+            accentColor: '#FF3366',
+            artworkSplit: 62,
+            gridMargin: 16,
+            borderWidth: 1,
+            row1Split: 45,
+            artComplexity: 6,
+            artDistortion: 1.2,
+            artMode: 'biomorphic',
+            animateArt: true,
+            h1Font: 'font-syne',
+            h2Font: 'font-space-grotesk',
+            fontScale: 1.0,
+            h1Text: "LIQUID\nLIQUID",
+            h2Text: "With: Pink Skull, Dave P, Dave Pak, Mike Z, Russ Alexander, Joel, Nez, Steve Vena, Adam Sparkles, Julian S. Process & Broadzilla",
+            bodyText: "9pm - 3:30am, Saturday May 23rd, 2010\nAt Voyeur, 1221 St. James St. Philadelphia, PA\n$12 advance $15 door. Details: www.igetrvng.com",
+            stampText: "2000 ---------- 2010\nMaking Time",
+            animPhase: 0
+        };
+
+        // DOM Elements
+        const elPoster = document.getElementById('poster-viewport');
+        const elZoneArtwork = document.getElementById('zone-artwork');
+        const elZoneGrid = document.getElementById('zone-grid-wrapper');
+        const elGridMainBox = document.getElementById('grid-main-box');
+        const elCellH1 = document.getElementById('cell-h1');
+        const elCellH2 = document.getElementById('cell-h2');
+        const elPosterH1 = document.getElementById('poster-h1-text');
+        const elPosterH2 = document.getElementById('poster-h2-text');
+        const elPosterBody = document.getElementById('poster-body-text');
+        const elPosterStamp = document.getElementById('poster-stamp-text');
+        const elSvgCanvas = document.getElementById('svg-fluid-canvas');
+        const badgeRatioIndicator = document.getElementById('badge-ratio-indicator');
+        const badgeHeaderFormat = document.getElementById('badge-header-format');
+        const labelSplitRatio = document.getElementById('label-split-ratio');
+
+        const btnRatio711 = document.getElementById('btn-ratio-7-11');
+        const btnRatio117 = document.getElementById('btn-ratio-11-7');
+
+        const inputBgColor = document.getElementById('input-bg-color');
+        const textBgColor = document.getElementById('text-bg-color');
+        const inputFgColor = document.getElementById('input-fg-color');
+        const textFgColor = document.getElementById('text-fg-color');
+        const btnInvertColor = document.getElementById('btn-invert-color');
+        
+        const sliderArtworkSplit = document.getElementById('slider-artwork-split');
+        const sliderGridMargin = document.getElementById('slider-grid-margin');
+        const sliderBorderWidth = document.getElementById('slider-border-width');
+        const sliderRow1Split = document.getElementById('slider-row1-split');
+        
+        const sliderArtComplexity = document.getElementById('slider-art-complexity');
+        const sliderArtDistortion = document.getElementById('slider-art-distortion');
+        const checkAnimateArt = document.getElementById('check-animate-art');
+        const btnRandomizeArt = document.getElementById('btn-randomize-art');
+
+        const selectH1Font = document.getElementById('select-h1-font');
+        const selectH2Font = document.getElementById('select-h2-font');
+        const sliderFontScale = document.getElementById('slider-font-scale');
+
+        const inputH1Text = document.getElementById('input-h1-text');
+        const inputH2Text = document.getElementById('input-h2-text');
+        const inputBodyText = document.getElementById('input-body-text');
+        const inputStampText = document.getElementById('input-stamp-text');
+
+        const btnPresetLiquid = document.getElementById('btn-preset-liquid');
+        const btnPresetMonochrome = document.getElementById('btn-preset-monochrome');
+        const btnExportSvg = document.getElementById('btn-export-svg');
+        const btnExportPdf = document.getElementById('btn-export-pdf');
+        const btnGenerateRandom = document.getElementById('btn-generate-random');
+
+        const PALETTES = [
+            { bg: '#0000FF', fg: '#F2F2EC', accent: '#FF3366' },
+            { bg: '#111827', fg: '#F9FAFB', accent: '#10B981' },
+            { bg: '#E10600', fg: '#000000', accent: '#FFFFFF' },
+            { bg: '#1A1A1A', fg: '#F2A900', accent: '#000000' },
+            { bg: '#0A2540', fg: '#00D4B2', accent: '#635BFF' },
+            { bg: '#2D006B', fg: '#FF007A', accent: '#00E5FF' },
+            { bg: '#E5DDCB', fg: '#111111', accent: '#C84B31' }
+        ];
+
+        const FONTS_H1 = ['font-syne', 'font-righteous', 'font-comfortaa', 'font-space-grotesk'];
+        const FONTS_H2 = ['font-space-grotesk', 'font-jakarta', 'font-lexend', 'font-inter', 'font-space-mono'];
+        const ART_MODES = ['biomorphic', 'geometric', 'algorithmic'];
+
+        function setAspectRatio(ratio) {
+            state.aspectRatio = ratio;
+            if (ratio === '7:11') {
+                elPoster.className = 'w-full max-w-[560px] aspect-7-11 bg-[#0000FF] text-[#F2F2EC] flex flex-col relative overflow-hidden my-auto rounded-sm select-none';
+                badgeRatioIndicator.innerText = 'Format: 7:11 Portrait';
+                badgeHeaderFormat.innerText = '7:11 Portrait';
+                labelSplitRatio.innerText = 'Artwork Zone Ratio';
+                btnRatio711.className = 'bg-blue-600/30 hover:bg-blue-600/50 border border-blue-500 text-blue-200 py-2 px-3 rounded text-left transition flex items-center justify-between';
+                btnRatio117.className = 'bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-300 py-2 px-3 rounded text-left transition flex items-center justify-between';
+            } else {
+                elPoster.className = 'w-full max-w-[880px] aspect-11-7 bg-[#0000FF] text-[#F2F2EC] flex flex-row relative overflow-hidden my-auto rounded-sm select-none';
+                badgeRatioIndicator.innerText = 'Format: 11:7 Landscape';
+                badgeHeaderFormat.innerText = '11:7 Landscape';
+                labelSplitRatio.innerText = 'Artwork vs Grid Width';
+                btnRatio117.className = 'bg-blue-600/30 hover:bg-blue-600/50 border border-blue-500 text-blue-200 py-2 px-3 rounded text-left transition flex items-center justify-between';
+                btnRatio711.className = 'bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-300 py-2 px-3 rounded text-left transition flex items-center justify-between';
+            }
+            updatePosterUI();
+        }
+
+        function updatePosterUI() {
+            inputBgColor.value = state.bgColor;
+            textBgColor.value = state.bgColor;
+            inputFgColor.value = state.fgColor;
+            textFgColor.value = state.fgColor;
+
+            elPoster.style.backgroundColor = state.bgColor;
+            elPoster.style.color = state.fgColor;
+
+            if (state.aspectRatio === '7:11') {
+                elZoneArtwork.style.width = '100%';
+                elZoneArtwork.style.height = `${state.artworkSplit}%`;
+                elZoneGrid.style.width = '100%';
+                elZoneGrid.style.height = `${100 - state.artworkSplit}%`;
+            } else {
+                elZoneArtwork.style.width = `${state.artworkSplit}%`;
+                elZoneArtwork.style.height = '100%';
+                elZoneGrid.style.width = `${100 - state.artworkSplit}%`;
+                elZoneGrid.style.height = '100%';
+            }
+
+            elZoneGrid.style.padding = `${state.gridMargin}px`;
+
+            const bw = `${state.borderWidth}px`;
+            elGridMainBox.style.borderWidth = bw;
+            document.querySelectorAll('#grid-main-box div').forEach(div => {
+                if (div.classList.contains('border-r')) div.style.borderRightWidth = bw;
+                if (div.classList.contains('border-b')) div.style.borderBottomWidth = bw;
+            });
+
+            elCellH1.style.width = `${state.row1Split}%`;
+            elCellH2.style.width = `${100 - state.row1Split}%`;
+
+            elPosterH1.className = `${state.h1Font} font-extrabold uppercase leading-[0.88] tracking-tight text-balance break-words flex flex-col`;
+            elPosterH2.className = `${state.h2Font} font-bold uppercase tracking-wider text-[11px] whitespace-pre-line break-words`;
+            elPosterBody.className = `${state.h2Font} font-medium leading-snug text-[10px] whitespace-pre-line opacity-95`;
+            elPosterStamp.className = `font-space-mono font-bold text-[9px] uppercase tracking-wider whitespace-pre-line leading-tight`;
+
+            const mult = state.aspectRatio === '11:7' ? 0.95 : 1.0;
+            elPosterH1.style.fontSize = `${2.2 * state.fontScale * mult}rem`;
+            elPosterH2.style.fontSize = `${11 * state.fontScale * mult}px`;
+            elPosterBody.style.fontSize = `${10 * state.fontScale * mult}px`;
+            elPosterStamp.style.fontSize = `${9 * state.fontScale * mult}px`;
+
+            const lines = state.h1Text.split('\n');
+            const line1 = lines[0] || state.h1Text;
+            const line2 = lines[1] || lines[0] || state.h1Text;
+            elPosterH1.innerHTML = `
+                <span class="block">${escapeXml(line1)}</span>
+                <span class="block transform -scale-y-100 opacity-80 origin-center">${escapeXml(line2)}</span>
+            `;
+
+            elPosterH2.innerText = state.h2Text;
+            elPosterBody.innerText = state.bodyText;
+            elPosterStamp.innerText = state.stampText;
+
+            document.getElementById('val-artwork-split').innerText = `${state.artworkSplit}% / ${100 - state.artworkSplit}%`;
+            document.getElementById('val-grid-margin').innerText = `${state.gridMargin}px`;
+            document.getElementById('val-border-width').innerText = `${state.borderWidth}px`;
+            document.getElementById('val-row1-split').innerText = `${state.row1Split}% / ${100 - state.row1Split}%`;
+            document.getElementById('val-art-complexity').innerText = state.artComplexity;
+            document.getElementById('val-art-distortion').innerText = state.artDistortion;
+            document.getElementById('val-font-scale').innerText = `${state.fontScale}x`;
+
+            renderFluidArtwork();
+        }
+
+        // Generate dynamic vector paths and shapes
+        function generateArtworkElements(canvasW = 700, canvasH = 1100) {
+            const count = state.artComplexity;
+            const dist = state.artDistortion;
+            const phase = state.animPhase;
+            const color = state.fgColor;
+            const bg = state.bgColor;
+            const accent = state.accentColor || state.fgColor;
+
+            let elements = [];
+            elements.push(`<rect x="0" y="0" width="${canvasW}" height="${canvasH}" fill="${bg}" />`);
+
+            if (state.artMode === 'geometric') {
+                const gridStep = canvasW / (count + 1);
+                for (let i = 1; i <= count; i++) {
+                    for (let j = 1; j <= count * 1.5; j++) {
+                        const cx = i * gridStep + Math.sin(phase + i) * 15 * dist;
+                        const cy = j * (canvasH / (count * 1.5 + 1)) + Math.cos(phase + j) * 15 * dist;
+                        const size = Math.max(2, 25 * dist + Math.sin(phase + i + j) * 12);
+                        if ((i + j) % 2 === 0) {
+                            elements.push(`<rect x="${(cx - size/2).toFixed(2)}" y="${(cy - size/2).toFixed(2)}" width="${size.toFixed(2)}" height="${size.toFixed(2)}" fill="${color}" opacity="0.85" />`);
+                        } else {
+                            elements.push(`<circle cx="${cx.toFixed(2)}" cy="${cy.toFixed(2)}" r="${(size/2).toFixed(2)}" fill="${accent}" opacity="0.75" />`);
+                        }
+                    }
+                }
+            } else if (state.artMode === 'algorithmic') {
+                for (let i = 0; i < count * 4; i++) {
+                    const y = (canvasH * 0.05) + (i * (canvasH * 0.9) / (count * 4));
+                    const wave = Math.sin(phase + i * 0.4) * 70 * dist;
+                    const d = `M ${(canvasW * 0.08).toFixed(2)} ${y.toFixed(2)} Q ${(canvasW * 0.5).toFixed(2)} ${(y + wave).toFixed(2)} ${(canvasW * 0.92).toFixed(2)} ${y.toFixed(2)}`;
+                    elements.push(`<path d="${d}" stroke="${i % 2 === 0 ? color : accent}" stroke-width="${(3 * dist).toFixed(2)}" fill="none" opacity="0.85" />`);
+                }
+            } else {
+                for (let i = 0; i < count; i++) {
+                    const angle = (i / count) * Math.PI * 2 + (phase * 0.2);
+                    const r = (canvasW * 0.3) + Math.sin(phase + i) * 45 * dist;
+                    const cx = (canvasW * 0.5) + Math.cos(angle) * r;
+                    const cy = (canvasH * 0.5) + Math.sin(angle) * r;
+                    const radius = 60 + Math.sin(phase * 1.5 + i) * 30 * dist;
+                    elements.push(`<circle cx="${cx.toFixed(2)}" cy="${cy.toFixed(2)}" r="${Math.max(5, radius).toFixed(2)}" fill="${i % 2 === 0 ? color : accent}" opacity="0.65" />`);
+                }
+            }
+            return elements.join('\n');
+        }
+
+        function renderFluidArtwork() {
+            const isPortrait = state.aspectRatio === '7:11';
+            const canvasW = isPortrait ? 700 : 770;
+            const canvasH = isPortrait ? 682 : 700;
+            elSvgCanvas.setAttribute('viewBox', `0 0 ${canvasW} ${canvasH}`);
+            elSvgCanvas.innerHTML = generateArtworkElements(canvasW, canvasH);
+        }
+
+        // Helper to perform simple text wrapping for SVG export
+        function wrapTextSVG(text, maxCharsPerLine) {
+            const rawLines = text.split('\n');
+            let output = [];
+            rawLines.forEach(rawLine => {
+                const words = rawLine.split(' ');
+                let current = "";
+                words.forEach(w => {
+                    if ((current + " " + w).trim().length > maxCharsPerLine) {
+                        if (current) output.push(current.trim());
+                        current = w;
+                    } else {
+                        current += (current ? " " : "") + w;
+                    }
+                });
+                if (current) output.push(current.trim());
+            });
+            return output;
+        }
+
+        // FULL COMPOSITION PURE SVG GENERATOR (Artwork + Grid Lines + All Text)
+        function generatePureVectorSVG() {
+            const isPortrait = state.aspectRatio === '7:11';
+            const width = 700;
+            const height = isPortrait ? 1100 : 700;
+            
+            const h1FontFamily = FONT_MAP[state.h1Font] || 'sans-serif';
+            const h2FontFamily = FONT_MAP[state.h2Font] || 'sans-serif';
+            const stampFontFamily = FONT_MAP['font-space-mono'];
+
+            let svg = `<?xml version="1.0" encoding="UTF-8" standalone="no"?>\n`;
+            svg += `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}">\n`;
+            
+            // 1. Overall Background Fill
+            svg += `  <!-- Background -->\n`;
+            svg += `  <rect x="0" y="0" width="${width}" height="${height}" fill="${state.bgColor}" />\n\n`;
+
+            // 2. Fluid Vector Artwork Zone
+            const artW = isPortrait ? width : width * (state.artworkSplit / 100);
+            const artH = isPortrait ? height * (state.artworkSplit / 100) : height;
+            
+            svg += `  <!-- Artwork Zone Layer -->\n`;
+            svg += `  <g id="ArtworkZone" transform="translate(0, 0)">\n`;
+            svg += `    <svg width="${artW}" height="${artH}" viewBox="0 0 ${artW} ${artH}">\n`;
+            svg += `      ${generateArtworkElements(artW, artH)}\n`;
+            svg += `    </svg>\n`;
+            svg += `  </g>\n\n`;
+
+            // 3. Grid Architecture Coordinates
+            const pad = state.gridMargin * (width / 500);
+            const gridX = isPortrait ? pad : width * (state.artworkSplit / 100) + pad;
+            const gridY = isPortrait ? height * (state.artworkSplit / 100) + pad : pad;
+            const gridW = isPortrait ? width - (pad * 2) : width * ((100 - state.artworkSplit) / 100) - (pad * 2);
+            const gridH = isPortrait ? (height - (height * (state.artworkSplit / 100))) - (pad * 2) : height - (pad * 2);
+
+            const row1H = gridH * 0.5;
+            const row2H = gridH * 0.5;
+            const col1W = gridW * (state.row1Split / 100);
+            const col2W = gridW * (1 - state.row1Split / 100);
+
+            svg += `  <!-- Modular Grid Boxes & Lines -->\n`;
+            svg += `  <g id="GridArchitecture" stroke="${state.fgColor}" stroke-width="${state.borderWidth}" fill="none">\n`;
+            // Outer Grid Box
+            svg += `    <rect x="${gridX.toFixed(2)}" y="${gridY.toFixed(2)}" width="${gridW.toFixed(2)}" height="${gridH.toFixed(2)}" />\n`;
+            // Horizontal Split Line between Row 1 & Row 2
+            svg += `    <line x1="${gridX.toFixed(2)}" y1="${(gridY + row1H).toFixed(2)}" x2="${(gridX + gridW).toFixed(2)}" y2="${(gridY + row1H).toFixed(2)}" />\n`;
+            // Vertical Split Line in Row 1 (Cell H1 / Cell H2)
+            svg += `    <line x1="${(gridX + col1W).toFixed(2)}" y1="${gridY.toFixed(2)}" x2="${(gridX + col1W).toFixed(2)}" y2="${(gridY + row1H).toFixed(2)}" />\n`;
+            // Vertical Split Line in Row 2 (Cell Body / Cell Stamp)
+            const row2Col1W = gridW * 0.60;
+            svg += `    <line x1="${(gridX + row2Col1W).toFixed(2)}" y1="${(gridY + row1H).toFixed(2)}" x2="${(gridX + row2Col1W).toFixed(2)}" y2="${(gridY + gridH).toFixed(2)}" />\n`;
+            
+            // Stamp Dashed Inner Box
+            const stampX = gridX + row2Col1W + 8;
+            const stampY = gridY + row1H + 8;
+            const stampW = gridW - row2Col1W - 16;
+            const stampH = row2H - 16;
+            svg += `    <rect x="${stampX.toFixed(2)}" y="${stampY.toFixed(2)}" width="${stampW.toFixed(2)}" height="${stampH.toFixed(2)}" stroke-dasharray="4,4" />\n`;
+            svg += `  </g>\n\n`;
+
+            // 4. Pure Vector Typographic Text
+            svg += `  <!-- Poster Typographic Layers -->\n`;
+            svg += `  <g id="Typography" fill="${state.fgColor}">\n`;
+
+            // --- CELL H1 (Title) ---
+            const h1Lines = state.h1Text.split('\n');
+            const h1Text1 = h1Lines[0] || state.h1Text;
+            const h1Text2 = h1Lines[1] || h1Lines[0] || state.h1Text;
+            const h1FontSize = 36 * state.fontScale;
+
+            svg += `    <!-- H1 Title Layer -->\n`;
+            svg += `    <g transform="translate(${(gridX + 14).toFixed(2)}, ${(gridY + row1H * 0.42).toFixed(2)})">\n`;
+            svg += `      <text font-family="${h1FontFamily}" font-weight="800" font-size="${h1FontSize.toFixed(1)}" text-anchor="start" letter-spacing="-1">${escapeXml(h1Text1)}</text>\n`;
+            svg += `      <g transform="translate(0, ${(h1FontSize * 0.85).toFixed(2)}) scale(1, -1)">\n`;
+            svg += `        <text font-family="${h1FontFamily}" font-weight="800" font-size="${h1FontSize.toFixed(1)}" text-anchor="start" letter-spacing="-1" opacity="0.8">${escapeXml(h1Text2)}</text>\n`;
+            svg += `      </g>\n`;
+            svg += `    </g>\n`;
+
+            // --- CELL H2 (Lineup Text) ---
+            const h2FontSize = 12 * state.fontScale;
+            const h2Wrapped = wrapTextSVG(state.h2Text, Math.floor(col2W / 8));
+            svg += `    <!-- H2 Lineup Layer -->\n`;
+            svg += `    <text x="${(gridX + col1W + 14).toFixed(2)}" y="${(gridY + 22).toFixed(2)}" font-family="${h2FontFamily}" font-weight="700" font-size="${h2FontSize.toFixed(1)}">\n`;
+            h2Wrapped.forEach((line, idx) => {
+                svg += `      <tspan x="${(gridX + col1W + 14).toFixed(2)}" dy="${idx === 0 ? 0 : (h2FontSize * 1.25).toFixed(1)}">${escapeXml(line)}</tspan>\n`;
+            });
+            svg += `    </text>\n`;
+
+            // --- CELL BODY (Venue & Date Text) ---
+            const bodyFontSize = 11 * state.fontScale;
+            const bodyWrapped = wrapTextSVG(state.bodyText, Math.floor(row2Col1W / 7.5));
+            svg += `    <!-- Body / Venue Details Layer -->\n`;
+            svg += `    <text x="${(gridX + 14).toFixed(2)}" y="${(gridY + row1H + 24).toFixed(2)}" font-family="${h2FontFamily}" font-weight="500" font-size="${bodyFontSize.toFixed(1)}" opacity="0.95">\n`;
+            bodyWrapped.forEach((line, idx) => {
+                svg += `      <tspan x="${(gridX + 14).toFixed(2)}" dy="${idx === 0 ? 0 : (bodyFontSize * 1.3).toFixed(1)}">${escapeXml(line)}</tspan>\n`;
+            });
+            svg += `    </text>\n`;
+
+            // --- CELL STAMP (Stamp Badge Text) ---
+            const stampFontSize = 10 * state.fontScale;
+            const stampLines = state.stampText.split('\n');
+            const stampCenterX = stampX + (stampW / 2);
+            const stampStartY = stampY + (stampH / 2) - ((stampLines.length - 1) * stampFontSize * 0.6);
+
+            svg += `    <!-- Stamp Badge Layer -->\n`;
+            svg += `    <text x="${stampCenterX.toFixed(2)}" y="${stampStartY.toFixed(2)}" font-family="${stampFontFamily}" font-weight="700" font-size="${stampFontSize.toFixed(1)}" text-anchor="middle">\n`;
+            stampLines.forEach((line, idx) => {
+                svg += `      <tspan x="${stampCenterX.toFixed(2)}" dy="${idx === 0 ? 0 : (stampFontSize * 1.3).toFixed(1)}">${escapeXml(line)}</tspan>\n`;
+            });
+            svg += `    </text>\n`;
+
+            svg += `  </g>\n`;
+            svg += `</svg>`;
+            return svg;
+        }
+
+        function generateRandomComposition() {
+            const randomPalette = PALETTES[Math.floor(Math.random() * PALETTES.length)];
+            state.bgColor = randomPalette.bg;
+            state.fgColor = randomPalette.fg;
+            state.accentColor = randomPalette.accent;
+
+            state.h1Font = FONTS_H1[Math.floor(Math.random() * FONTS_H1.length)];
+            state.h2Font = FONTS_H2[Math.floor(Math.random() * FONTS_H2.length)];
+            state.artMode = ART_MODES[Math.floor(Math.random() * ART_MODES.length)];
+
+            state.artworkSplit = Math.floor(Math.random() * 35) + 40;
+            state.gridMargin = Math.floor(Math.random() * 20) + 10;
+            state.borderWidth = Math.floor(Math.random() * 3) + 1;
+            state.row1Split = Math.floor(Math.random() * 40) + 30;
+            state.artComplexity = Math.floor(Math.random() * 8) + 4;
+            state.artDistortion = parseFloat((Math.random() * 1.8 + 0.6).toFixed(1));
+            state.fontScale = parseFloat((Math.random() * 0.5 + 0.8).toFixed(2));
+
+            selectH1Font.value = state.h1Font;
+            selectH2Font.value = state.h2Font;
+            sliderArtworkSplit.value = state.artworkSplit;
+            sliderGridMargin.value = state.gridMargin;
+            sliderBorderWidth.value = state.borderWidth;
+            sliderRow1Split.value = state.row1Split;
+            sliderArtComplexity.value = state.artComplexity;
+            sliderArtDistortion.value = state.artDistortion;
+            sliderFontScale.value = state.fontScale;
+
+            updatePosterUI();
+        }
+
+        // PURE VECTOR PDF EXPORT VIA jsPDF PRIMITIVES & FULL COMPOSITION
+        function exportPureVectorPDF() {
+            const { jsPDF } = window.jspdf;
+            const isPortrait = state.aspectRatio === '7:11';
+            const doc = new jsPDF({
+                orientation: isPortrait ? 'portrait' : 'landscape',
+                unit: 'pt',
+                format: isPortrait ? [500, 785] : [785, 500]
+            });
+
+            const width = doc.internal.pageSize.getWidth();
+            const height = doc.internal.pageSize.getHeight();
+
+            // 1. Vector Background Fill
+            doc.setFillColor(state.bgColor);
+            doc.rect(0, 0, width, height, 'F');
+
+            // 2. Vector Artwork Elements Rendering
+            const count = state.artComplexity;
+            const dist = state.artDistortion;
+            const phase = state.animPhase;
+
+            const artW = isPortrait ? width : width * (state.artworkSplit / 100);
+            const artH = isPortrait ? height * (state.artworkSplit / 100) : height;
+
+            if (state.artMode === 'geometric') {
+                const gridStep = artW / (count + 1);
+                for (let i = 1; i <= count; i++) {
+                    for (let j = 1; j <= count * 1.5; j++) {
+                        const cx = i * gridStep + Math.sin(phase + i) * 15 * dist;
+                        const cy = j * (artH / (count * 1.5 + 1)) + Math.cos(phase + j) * 15 * dist;
+                        const size = Math.max(2, 25 * dist + Math.sin(phase + i + j) * 12);
+                        if ((i + j) % 2 === 0) {
+                            doc.setFillColor(state.fgColor);
+                            doc.rect(cx - size / 2, cy - size / 2, size, size, 'F');
+                        } else {
+                            doc.setFillColor(state.accentColor || state.fgColor);
+                            doc.circle(cx, cy, size / 2, 'F');
+                        }
+                    }
+                }
+            } else if (state.artMode === 'algorithmic') {
+                doc.setLineWidth(2 * dist);
+                for (let i = 0; i < count * 4; i++) {
+                    const y = (artH * 0.05) + (i * (artH * 0.9) / (count * 4));
+                    const wave = Math.sin(phase + i * 0.4) * 70 * dist;
+                    doc.setDrawColor(i % 2 === 0 ? state.fgColor : (state.accentColor || state.fgColor));
+                    // Approximate wave curves using jsPDF lines
+                    doc.line(artW * 0.08, y, artW * 0.5, y + wave);
+                    doc.line(artW * 0.5, y + wave, artW * 0.92, y);
+                }
+            } else {
+                for (let i = 0; i < count; i++) {
+                    const angle = (i / count) * Math.PI * 2 + (phase * 0.2);
+                    const r = (artW * 0.3) + Math.sin(phase + i) * 45 * dist;
+                    const cx = (artW * 0.5) + Math.cos(angle) * r;
+                    const cy = (artH * 0.5) + Math.sin(angle) * r;
+                    const radius = Math.max(5, 60 + Math.sin(phase * 1.5 + i) * 30 * dist);
+                    doc.setFillColor(i % 2 === 0 ? state.fgColor : (state.accentColor || state.fgColor));
+                    doc.circle(cx, cy, radius, 'F');
+                }
+            }
+
+            // 3. Modular Vector Grid Lines & Frames
+            const pad = state.gridMargin * (width / 500);
+            
+            let gridX = isPortrait ? pad : width * (state.artworkSplit / 100) + pad;
+            let gridY = isPortrait ? height * (state.artworkSplit / 100) + pad : pad;
+            let gridW = isPortrait ? width - (pad * 2) : width * ((100 - state.artworkSplit) / 100) - (pad * 2);
+            let gridH = isPortrait ? (height - (height * (state.artworkSplit / 100))) - (pad * 2) : height - (pad * 2);
+
+            doc.setDrawColor(state.fgColor);
+            doc.setLineWidth(state.borderWidth);
+
+            // Outer Frame Box
+            doc.rect(gridX, gridY, gridW, gridH, 'D');
+
+            const row1H = gridH * 0.5;
+            const row2H = gridH * 0.5;
+            const col1W = gridW * (state.row1Split / 100);
+            const row2Col1W = gridW * 0.60;
+
+            // Split Lines
+            doc.line(gridX, gridY + row1H, gridX + gridW, gridY + row1H);
+            doc.line(gridX + col1W, gridY, gridX + col1W, gridY + row1H);
+            doc.line(gridX + row2Col1W, gridY + row1H, gridX + row2Col1W, gridY + gridH);
+
+            // Stamp Inner Box (Dashed Box)
+            const stampX = gridX + row2Col1W + 6;
+            const stampY = gridY + row1H + 6;
+            const stampW = gridW - row2Col1W - 12;
+            const stampH = row2H - 12;
+
+            if (typeof doc.setLineDashPattern === 'function') {
+                doc.setLineDashPattern([3, 3], 0);
+                doc.rect(stampX, stampY, stampW, stampH, 'D');
+                doc.setLineDashPattern([], 0);
+            } else {
+                doc.rect(stampX, stampY, stampW, stampH, 'D');
+            }
+
+            // 4. Vector Text Rendering
+            doc.setTextColor(state.fgColor);
+
+            // --- CELL H1 (Title) ---
+            doc.setFont("helvetica", "bold");
+            doc.setFontSize(28 * state.fontScale);
+            const lines = state.h1Text.split('\n');
+            const h1Line1 = lines[0] || state.h1Text;
+            const h1Line2 = lines[1] || lines[0] || state.h1Text;
+
+            doc.text(h1Line1, gridX + 12, gridY + (row1H * 0.45));
+            // Mirrored Line 2
+            doc.text(h1Line2, gridX + 12, gridY + (row1H * 0.45) + (26 * state.fontScale));
+
+            // --- CELL H2 (Lineup) ---
+            doc.setFontSize(8.5 * state.fontScale);
+            const wrappedH2 = doc.splitTextToSize(state.h2Text, gridW - col1W - 20);
+            doc.text(wrappedH2, gridX + col1W + 10, gridY + 18);
+
+            // --- CELL BODY (Venue & Date) ---
+            doc.setFont("helvetica", "normal");
+            doc.setFontSize(8 * state.fontScale);
+            const wrappedBody = doc.splitTextToSize(state.bodyText, row2Col1W - 18);
+            doc.text(wrappedBody, gridX + 10, gridY + row1H + 18);
+
+            // --- CELL STAMP (Stamp Badge) ---
+            doc.setFont("courier", "bold");
+            doc.setFontSize(7.5 * state.fontScale);
+            const stampLines = state.stampText.split('\n');
+            stampLines.forEach((stLine, idx) => {
+                doc.text(stLine, stampX + (stampW / 2), stampY + (stampH / 2) - 4 + (idx * 10), { align: 'center' });
+            });
+
+            doc.save(`poster-vector-${state.aspectRatio.replace(':', 'x')}.pdf`);
+        }
+
+        // Animation Request Loop
+        function animateLoop() {
+            if (state.animateArt) {
+                state.animPhase += 0.02;
+                renderFluidArtwork();
+            }
+            requestAnimationFrame(animateLoop);
+        }
+
+        // Listeners
+        btnRatio711.addEventListener('click', () => setAspectRatio('7:11'));
+        btnRatio117.addEventListener('click', () => setAspectRatio('11:7'));
+        btnGenerateRandom.addEventListener('click', generateRandomComposition);
+
+        function handleColorChange(bgColor, fgColor) {
+            if (bgColor !== null) state.bgColor = bgColor;
+            if (fgColor !== null) state.fgColor = fgColor;
+            updatePosterUI();
+        }
+
+        inputBgColor.addEventListener('input', (e) => handleColorChange(e.target.value, null));
+        textBgColor.addEventListener('input', (e) => handleColorChange(e.target.value, null));
+        inputFgColor.addEventListener('input', (e) => handleColorChange(null, e.target.value));
+        textFgColor.addEventListener('input', (e) => handleColorChange(null, e.target.value));
+
+        btnInvertColor.addEventListener('click', () => {
+            const temp = state.bgColor;
+            state.bgColor = state.fgColor;
+            state.fgColor = temp;
+            updatePosterUI();
+        });
+
+        sliderArtworkSplit.addEventListener('input', (e) => { state.artworkSplit = parseInt(e.target.value); updatePosterUI(); });
+        sliderGridMargin.addEventListener('input', (e) => { state.gridMargin = parseInt(e.target.value); updatePosterUI(); });
+        sliderBorderWidth.addEventListener('input', (e) => { state.borderWidth = parseInt(e.target.value); updatePosterUI(); });
+        sliderRow1Split.addEventListener('input', (e) => { state.row1Split = parseInt(e.target.value); updatePosterUI(); });
+        sliderArtComplexity.addEventListener('input', (e) => { state.artComplexity = parseInt(e.target.value); updatePosterUI(); });
+        sliderArtDistortion.addEventListener('input', (e) => { state.artDistortion = parseFloat(e.target.value); updatePosterUI(); });
+
+        checkAnimateArt.addEventListener('change', (e) => { state.animateArt = e.target.checked; });
+
+        btnRandomizeArt.addEventListener('click', () => { state.animPhase += Math.random() * 10; renderFluidArtwork(); });
+
+        selectH1Font.addEventListener('change', (e) => { state.h1Font = e.target.value; updatePosterUI(); });
+        selectH2Font.addEventListener('change', (e) => { state.h2Font = e.target.value; updatePosterUI(); });
+        sliderFontScale.addEventListener('input', (e) => { state.fontScale = parseFloat(e.target.value); updatePosterUI(); });
+
+        inputH1Text.addEventListener('input', (e) => { state.h1Text = e.target.value; updatePosterUI(); });
+        inputH2Text.addEventListener('input', (e) => { state.h2Text = e.target.value; updatePosterUI(); });
+        inputBodyText.addEventListener('input', (e) => { state.bodyText = e.target.value; updatePosterUI(); });
+        inputStampText.addEventListener('input', (e) => { state.stampText = e.target.value; updatePosterUI(); });
+
+        btnPresetLiquid.addEventListener('click', () => {
+            state.bgColor = "#0000FF"; state.fgColor = "#F2F2EC"; state.accentColor = "#FF3366";
+            state.artworkSplit = 62; state.gridMargin = 16; state.borderWidth = 1; state.row1Split = 45;
+            state.h1Font = 'font-syne'; state.h2Font = 'font-space-grotesk'; state.fontScale = 1.0;
+            state.h1Text = "LIQUID\nLIQUID"; setAspectRatio('7:11');
+        });
+
+        btnPresetMonochrome.addEventListener('click', () => {
+            state.bgColor = "#111827"; state.fgColor = "#F9FAFB"; state.accentColor = "#10B981";
+            state.artworkSplit = 60; state.gridMargin = 20; state.borderWidth = 2;
+            state.h1Font = 'font-righteous'; setAspectRatio('7:11');
+        });
+
+        // Pure Vector SVG Export Trigger
+        btnExportSvg.addEventListener('click', () => {
+            try {
+                const svgData = generatePureVectorSVG();
+                const svgBlob = new Blob([svgData], { type: 'image/svg+xml;charset=utf-8' });
+                const svgUrl = URL.createObjectURL(svgBlob);
+                
+                const downloadLink = document.createElement('a');
+                downloadLink.href = svgUrl;
+                downloadLink.download = `poster-vector-${state.aspectRatio.replace(':', 'x')}.svg`;
+                
+                document.body.appendChild(downloadLink);
+                downloadLink.click();
+                document.body.removeChild(downloadLink);
+                
+                setTimeout(() => URL.revokeObjectURL(svgUrl), 100);
+            } catch (err) {
+                console.error("SVG Export Error:", err);
+            }
+        });
+
+        // Pure Vector PDF Export Trigger
+        btnExportPdf.addEventListener('click', exportPureVectorPDF);
+
+        window.onload = function() {
+            setAspectRatio('7:11');
+            animateLoop();
+        };
+    </script>
+</body>
+</html>
