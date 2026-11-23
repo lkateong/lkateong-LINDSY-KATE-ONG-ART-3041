@@ -5,21 +5,20 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="Lindsy Kate's ART 3041 course portfolio for Fall 2026.">
   <title>A.I. FOR DESIGNERS — Lindsy Kate</title>
-
-  <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&family=Cormorant+Garamond:ital,wght@0,500;0,600;1,400;1,600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
-
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,400;1,600&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg-room: #f4eedb;
-      --card-bg: rgba(255, 255, 255, 0.94);
-      --card-border: #e2d7bc;
-      --text-main: #332922;
-      --text-muted: #786855;
-      --accent-green: #4a6b4c;
-      --accent-brown: #8c5e3c;
+      --bg-room: #f7f4e9;
+      --card-bg: rgba(255, 254, 250, 0.94);
+      --card-border: #dce5d6;
+      --text-main: #3d4639;
+      --text-muted: #78816f;
+      --accent-green: #66836a;
+      --accent-brown: #9a8065;
+      --sage-wash: #edf2e8;
+      --cream: #fbf8ee;
     }
 
     * { box-sizing: border-box; }
@@ -29,7 +28,7 @@
       margin: 0;
       min-width: 320px;
       color: var(--text-main);
-      background-color: #faf6eb;
+      background: var(--bg-room);
       font-family: 'Inter', sans-serif;
       font-size: 16px;
       line-height: 1.5;
@@ -38,7 +37,7 @@
     .hero {
       position: relative;
       width: 100%;
-      height: clamp(540px, 72vh, 800px);
+      min-height: clamp(540px, 72vh, 800px);
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -46,8 +45,8 @@
       text-align: center;
       padding: 24px 20px 20px;
       overflow: hidden;
-      border-bottom: 4px solid #d5cbba;
-      background-color: #d1dfc4;
+      border-bottom: 1px solid #dce3d3;
+      background: linear-gradient(145deg, #dce9d3 0%, #e8eddc 48%, #f3ead7 100%);
     }
 
     .hero-bg {
@@ -56,19 +55,33 @@
       width: 100%;
       height: 100%;
       z-index: 1;
-      object-fit: cover;
+      pointer-events: none;
+      background:
+        radial-gradient(ellipse at 18% 22%, rgba(255,255,255,.55) 0 9%, transparent 10%),
+        radial-gradient(ellipse at 84% 16%, rgba(255,255,255,.4) 0 12%, transparent 13%),
+        linear-gradient(180deg, transparent 56%, rgba(255,250,238,.48) 56% 59%, transparent 59%),
+        linear-gradient(180deg, #dce9d3, #e9eddc 58%, #e7d8bd 58%, #d8c6a9);
+    }
+
+    .hero::after {
+      content: '';
+      position: absolute;
+      z-index: 1;
+      inset: auto 0 0;
+      height: 42%;
+      background: radial-gradient(ellipse at 50% 100%, rgba(255,255,255,.25), transparent 70%);
       pointer-events: none;
     }
 
     .hero-content {
       position: relative;
       z-index: 2;
-      background: rgba(255, 255, 255, 0.92);
-      backdrop-filter: blur(8px);
+      background: rgba(255, 254, 250, 0.88);
+      backdrop-filter: blur(10px);
       padding: 22px 36px 26px;
-      border-radius: 18px;
-      border: 2px solid rgba(235, 220, 178, 0.8);
-      box-shadow: 0 12px 35px rgba(60, 50, 40, 0.15);
+      border-radius: 20px;
+      border: 1px solid rgba(164, 185, 157, 0.55);
+      box-shadow: 0 12px 35px rgba(67, 82, 61, 0.10);
       max-width: 90%;
       width: max-content;
       margin-top: 10px;
@@ -78,47 +91,46 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      border-bottom: 2px dashed #ebdcb2;
+      border-bottom: 1px dashed #cbd9c5;
       padding-bottom: 8px;
-      margin-bottom: 10px;
-      font-family: 'Press Start 2P', monospace;
-      font-size: 0.6rem;
-      color: #9c7c51;
-      letter-spacing: 0.05em;
+      margin-bottom: 12px;
+      font-size: 0.68rem;
+      font-weight: 600;
+      color: #788c72;
+      letter-spacing: 0.12em;
     }
 
-    .pixel-hearts { color: #d97777; letter-spacing: 2px; }
+    .pixel-hearts { color: #c69b91; letter-spacing: 3px; }
 
     .hero-title {
       margin: 0;
-      font-family: 'Press Start 2P', cursive, monospace;
-      font-size: clamp(1.05rem, 2.7vw, 1.9rem);
-      color: #5a7c5c;
-      text-shadow: 2px 2px 0px #f4eedb;
-      line-height: 1.35;
-      letter-spacing: -0.02em;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2rem, 5vw, 3.5rem);
+      font-weight: 600;
+      color: #536e55;
+      line-height: 1.08;
+      letter-spacing: 0.01em;
     }
 
     .hero-subtitle {
       margin: 8px 0 0;
-      font-family: 'VT323', monospace;
-      font-size: clamp(1.5rem, 2.7vw, 2.2rem);
-      color: #5c4f44;
-      letter-spacing: 0.06em;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(1.7rem, 3vw, 2.3rem);
+      color: #665b4d;
+      font-style: italic;
     }
 
     .hero-course {
       margin-top: 4px;
-      font-family: 'VT323', monospace;
-      font-size: 1.3rem;
-      color: #8c7355;
-      letter-spacing: 0.08em;
+      font-size: 0.8rem;
+      color: #8b806d;
+      letter-spacing: 0.12em;
       text-transform: uppercase;
     }
 
-    .hero-email { margin-top: 6px; font-size: 13px; }
-    .hero-email a { color: #5a7c5c; text-decoration: none; font-weight: 600; }
-    .hero-email a:hover { text-decoration: underline; color: #3b533c; }
+    .hero-email { margin-top: 12px; font-size: 13px; }
+    .hero-email a { color: #5b795e; text-decoration: none; font-weight: 600; }
+    .hero-email a:hover { text-decoration: underline; color: #405f44; }
 
     .content {
       max-width: 1500px;
@@ -129,15 +141,15 @@
     .section-title {
       text-align: center;
       font-family: 'Cormorant Garamond', serif;
-      font-size: 2.5rem;
-      font-style: italic;
-      color: #3d332a;
+      font-size: 2.8rem;
+      font-weight: 600;
+      color: #53634f;
       margin: 0 0 6px;
     }
 
     .section-subtitle {
       text-align: center;
-      color: #786855;
+      color: var(--text-muted);
       font-size: 0.95rem;
       margin-bottom: 32px;
     }
@@ -145,13 +157,12 @@
     .portfolio-section { margin: 0 0 44px; }
 
     .portfolio-heading {
-      font-family: 'Impact', 'Arial Narrow', 'VT323', sans-serif;
-      font-size: clamp(1.65rem, 3vw, 2.35rem);
-      line-height: 1;
-      font-weight: 900;
-      letter-spacing: -0.02em;
-      margin: 0 0 20px;
-      color: #32251f;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(1.7rem, 3vw, 2.2rem);
+      line-height: 1.15;
+      font-weight: 600;
+      margin: 0 0 18px;
+      color: #596c54;
     }
 
     .work-grid {
@@ -165,38 +176,44 @@
       display: flex;
       align-items: center;
       padding: 14px 18px;
-      background: rgba(255, 255, 255, 0.95);
-      border: 3px solid #ee9fbe;
-      border-radius: 20px;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
       text-decoration: none;
       color: var(--text-main);
-      box-shadow: 0 3px 8px rgba(110, 95, 75, 0.06);
-      transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+      box-shadow: 0 3px 10px rgba(89, 105, 78, 0.05);
+      transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease, background 0.2s ease;
     }
 
     .work-item:hover {
       transform: translateY(-3px);
-      box-shadow: 0 10px 20px rgba(110, 95, 75, 0.15);
-      border-color: #d97da4;
+      background: #fffefa;
+      box-shadow: 0 10px 22px rgba(89, 105, 78, 0.11);
+      border-color: #b7cbb0;
+    }
+
+    .work-item:focus-visible {
+      outline: 3px solid rgba(103, 146, 103, 0.35);
+      outline-offset: 3px;
     }
 
     .work-num {
-      font-family: 'VT323', monospace;
-      font-size: 1.7rem;
-      font-weight: 700;
-      color: #332922;
-      margin-right: 24px;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.55rem;
+      font-weight: 600;
+      color: #82977b;
+      margin-right: 22px;
       flex-shrink: 0;
     }
 
     .work-title {
-      font-size: 1.05rem;
+      font-size: 1rem;
       font-weight: 500;
-      line-height: 1.25;
+      line-height: 1.35;
       flex-grow: 1;
     }
 
-    .work-icon { font-size: 1.1rem; margin-left: 10px; opacity: 0.85; }
+    .work-icon { font-size: 1.1rem; margin-left: 10px; opacity: 0.75; }
 
     @media (max-width: 900px) { .work-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 
@@ -204,38 +221,15 @@
       .content { padding: 28px 14px 44px; }
       .work-grid { grid-template-columns: 1fr; }
       .work-item { min-height: 68px; }
-      .hero-content { padding: 16px 20px; }
+      .hero-content { padding: 18px 20px 20px; }
     }
   </style>
 </head>
 <body>
-
-  <!-- HERO SECTION -->
   <header class="hero">
-    <svg class="hero-bg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 360" preserveAspectRatio="xMidYMid slice">
-      <defs>
-        <linearGradient id="wallWallpaper" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#cbe3bc"/><stop offset="65%" stop-color="#b4d4a1"/><stop offset="100%" stop-color="#9fc48a"/></linearGradient>
-        <linearGradient id="woodPlanks" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#e8cca3"/><stop offset="50%" stop-color="#d6b282"/><stop offset="100%" stop-color="#bf9763"/></linearGradient>
-        <linearGradient id="logSofaGrad" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#8fa881"/><stop offset="100%" stop-color="#69875c"/></linearGradient>
-        <radialGradient id="sunlightBeam" cx="75%" cy="0%" r="85%"><stop offset="0%" stop-color="#fffce8" stop-opacity="0.85"/><stop offset="50%" stop-color="#ffebad" stop-opacity="0.4"/><stop offset="100%" stop-color="#ffd700" stop-opacity="0.0"/></radialGradient>
-        <filter id="acShadow" x="-10%" y="-10%" width="120%" height="120%"><feGaussianBlur stdDeviation="5" result="blur"/><feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.16 0"/></filter>
-      </defs>
-      <rect x="0" y="0" width="600" height="210" fill="url(#wallWallpaper)"/>
-      <g fill="#eaf2e3" opacity="0.65"><rect x="0" y="150" width="600" height="60"/><line x1="0" y1="150" x2="600" y2="150" stroke="#8fa881" stroke-width="3"/><line x1="0" y1="210" x2="600" y2="210" stroke="#78946b" stroke-width="4"/></g>
-      <rect x="0" y="210" width="600" height="150" fill="url(#woodPlanks)"/>
-      <g stroke="#ac8353" stroke-width="1.5" opacity="0.6"><line x1="0" y1="245" x2="600" y2="245"/><line x1="0" y1="285" x2="600" y2="285"/><line x1="0" y1="325" x2="600" y2="325"/></g>
-      <g transform="translate(420, 15)"><rect x="0" y="0" width="160" height="195" fill="#fcfcfc" stroke="#d5c8b0" stroke-width="4" rx="4"/><rect x="12" y="12" width="136" height="171" fill="#a7d4e8" opacity="0.65"/><line x1="80" y1="12" x2="80" y2="183" stroke="#d5c8b0" stroke-width="4"/><line x1="12" y1="98" x2="148" y2="98" stroke="#d5c8b0" stroke-width="4"/><polygon points="12,12 80,12 40,183 12,183" fill="#ffffff" opacity="0.3"/><path d="M 12 12 Q 35 45 25 120 Z" fill="#fff5dc" opacity="0.9"/><path d="M 148 12 Q 125 45 135 120 Z" fill="#fff5dc" opacity="0.9"/></g>
-      <g transform="translate(280, 22)"><circle cx="20" cy="20" r="22" fill="#ffffff" opacity="0.8" stroke="#d5c8b0" stroke-width="2"/><path d="M 20 8 Q 28 14 26 24 Q 22 34 20 34 Q 18 34 14 24 Q 12 14 20 8 Z" fill="#6da873" stroke="#3d6143" stroke-width="1.5"/><path d="M 20 20 L 20 32" stroke="#3d6143" stroke-width="1.5"/></g>
-      <g transform="translate(35, 125)"><ellipse cx="25" cy="85" rx="20" ry="8" fill="#000" opacity="0.2" filter="url(#acShadow)"/><path d="M 12 55 L 38 55 L 44 82 L 6 82 Z" fill="#c47852" stroke="#8a4929" stroke-width="2"/><ellipse cx="25" cy="55" rx="13" ry="4" fill="#a35f3d"/><path d="M 25 51 Q 12 25 -2 15 C 2 38 18 45 25 51 Z" fill="#75a86d" stroke="#3b5e36" stroke-width="2"/><path d="M 25 51 Q 38 22 55 10 C 52 35 35 44 25 51 Z" fill="#588f50" stroke="#3b5e36" stroke-width="2"/><path d="M 25 51 Q 26 18 30 -2 C 34 18 28 40 25 51 Z" fill="#8bc280" stroke="#3b5e36" stroke-width="2"/></g>
-      <g transform="translate(30, 90)"><ellipse cx="115" cy="115" rx="110" ry="25" fill="#000" opacity="0.22" filter="url(#acShadow)"/><rect x="15" y="45" width="200" height="85" rx="16" fill="url(#logSofaGrad)" stroke="#455e3a" stroke-width="2.5"/><circle cx="30" cy="88" r="22" fill="#78946b" stroke="#455e3a" stroke-width="2"/><circle cx="200" cy="88" r="22" fill="#78946b" stroke="#455e3a" stroke-width="2"/><rect x="42" y="32" width="146" height="70" rx="12" fill="#a0b894" stroke="#557049" stroke-width="2"/><rect x="42" y="80" width="146" height="52" rx="10" fill="#849e75" stroke="#455e3a" stroke-width="2"/><rect x="65" y="65" width="42" height="35" rx="10" fill="#f2cb80" stroke="#b08a3d" stroke-width="2" transform="rotate(-10 86 82)"/><circle cx="82" cy="78" r="3.5" fill="#d97777"/><circle cx="98" cy="72" r="3.5" fill="#d97777"/></g>
-      <g transform="translate(145, 230)"><ellipse cx="55" cy="45" rx="50" ry="16" fill="#000" opacity="0.2" filter="url(#acShadow)"/><ellipse cx="55" cy="35" rx="52" ry="36" fill="#d4ad7d" stroke="#8a5c2d" stroke-width="2.5"/><ellipse cx="55" cy="35" rx="42" ry="28" fill="none" stroke="#b88a52" stroke-width="1.8" stroke-dasharray="6,3"/><circle cx="35" cy="25" r="12" fill="#e37b7b" stroke="#8c3838" stroke-width="1.8"/><path d="M 23 25 Q 18 20 23 15" fill="none" stroke="#8c3838" stroke-width="1.5"/><rect x="68" y="28" width="10" height="12" rx="3" fill="#ffffff" stroke="#9bb1c4" stroke-width="1.5"/></g>
-      <g transform="translate(230, 215)"><ellipse cx="110" cy="75" rx="100" ry="58" fill="#f7f0d0" stroke="#dfcb88" stroke-width="2.5" opacity="0.95"/><path d="M 110 65 Q 115 58 120 65 Q 127 70 120 75 Q 115 82 110 75 Q 103 70 110 65 Z" fill="#c3deba" stroke="#78a16d" stroke-width="1.5"/></g>
-      <g transform="translate(305, 235)"><ellipse cx="45" cy="45" rx="26" ry="20" fill="#c49a6c" stroke="#5e3e23" stroke-width="2.2"/><circle cx="32" cy="28" r="9" fill="#c49a6c" stroke="#5e3e23" stroke-width="1.8"/><circle cx="32" cy="28" r="4" fill="#edd0b2"/><circle cx="60" cy="26" r="9" fill="#c49a6c" stroke="#5e3e23" stroke-width="1.8"/><circle cx="60" cy="26" r="4" fill="#edd0b2"/><path d="M 38 40 Q 42 43 46 40" fill="none" stroke="#5e3e23" stroke-width="2" stroke-linecap="round"/><path d="M 50 38 Q 54 41 58 38" fill="none" stroke="#5e3e23" stroke-width="2" stroke-linecap="round"/><ellipse cx="48" cy="45" rx="6" ry="4" fill="#edd0b2" stroke="#5e3e23" stroke-width="1.5"/><circle cx="48" cy="44" r="2" fill="#5e3e23"/></g>
-      <polygon points="120,0 440,0 600,280 240,280" fill="url(#sunlightBeam)" style="mix-blend-mode: overlay;" pointer-events="none"/>
-    </svg>
-
+    <div class="hero-bg" aria-hidden="true"></div>
     <div class="hero-content">
-      <div class="hero-badge-header"><span>PORTFOLIO.EXE</span><span class="pixel-hearts">♥♥♥</span></div>
+      <div class="hero-badge-header"><span>PORTFOLIO</span><span class="pixel-hearts" aria-hidden="true">♥♥♥</span></div>
       <h1 class="hero-title">A.I. FOR DESIGNERS</h1>
       <div class="hero-subtitle">Lindsy Kate</div>
       <div class="hero-course">ART 3041 · Fall 2026</div>
@@ -243,7 +237,6 @@
     </div>
   </header>
 
-  <!-- MAIN WORK LIST -->
   <main class="content">
     <h2 class="section-title">Course Work</h2>
     <p class="section-subtitle">A studio portfolio exploring artificial intelligence &amp; visual design.</p>
@@ -264,7 +257,7 @@
         <a href="a_visual_commute_story.html" class="work-item"><span class="work-num">02</span><span class="work-title">Commute Story</span></a>
         <a href="#" class="work-item"><span class="work-num">03</span><span class="work-title">Experimental AI Interface</span></a>
         <a href="chair_sequence_exploration.html" class="work-item"><span class="work-num">04</span><span class="work-title">Chair Sequence</span></a>
-        <a href="https://lkateong.github.io/lkateong-LINDSY-KATE-ONG-ART-3041/ai_movie_poster_transformation.html" class="work-item" target="_blank" rel="noopener noreferrer"><span class="work-num">05</span><span class="work-title">Movie Concept</span></a>
+        <a href="https://lkateong.github.io/lkateong-LINDSY-KATE-ONG-ART-3041/ai_movie_poster_transformation.html" class="work-item" target="_blank" rel="noopener noreferrer"><span class="work-num">05</span><span class="work-title">AI Movie Poster Transformation</span></a>
       </div>
     </section>
 
@@ -302,6 +295,5 @@
       </div>
     </section>
   </main>
-
 </body>
 </html>
