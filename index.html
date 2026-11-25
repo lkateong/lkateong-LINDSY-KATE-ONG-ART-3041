@@ -1,13 +1,17 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="Lindsy Kate's ART 3041 course portfolio for Fall 2026.">
+
   <title>A.I. FOR DESIGNERS — Lindsy Kate</title>
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,400;1,600&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
   <style>
     :root {
       --bg-room: #fffaf1;
@@ -23,36 +27,72 @@
       --cream: #fffaf1;
     }
 
-    * { box-sizing: border-box; }
-    html { scroll-behavior: smooth; }
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
 
     body {
       margin: 0;
       min-width: 320px;
       color: var(--text-main);
       background:
-        radial-gradient(circle at 12% 8%, rgba(185, 213, 189, 0.20), transparent 17rem),
-        radial-gradient(circle at 88% 28%, rgba(239, 199, 161, 0.18), transparent 20rem),
+        radial-gradient(
+          circle at 12% 8%,
+          rgba(185, 213, 189, 0.20),
+          transparent 17rem
+        ),
+        radial-gradient(
+          circle at 88% 28%,
+          rgba(239, 199, 161, 0.18),
+          transparent 20rem
+        ),
         var(--bg-room);
+
       font-family: 'Inter', sans-serif;
       font-size: 16px;
       line-height: 1.5;
     }
 
+    /* RILAKKUMA CUSTOM CURSOR */
+
+    html,
+    body,
+    body * {
+      cursor: url("rilakkuma-cursor.png") 5 22, auto !important;
+    }
+
+    a,
+    button,
+    [role="button"] {
+      cursor: url("rilakkuma-cursor.png") 5 22, pointer !important;
+    }
+
+    /* HEADER */
+
     .hero {
       position: relative;
       width: 100%;
-      min-height: clamp(540px, 72vh, 800px);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: flex-start;
-      text-align: center;
-      padding: 24px 20px 20px;
+      display: block;
+      min-height: 0;
+      padding: 0;
+      background: none;
+      line-height: 0;
       overflow: hidden;
       border-bottom: 1px solid #eddbbc;
-      background:
-        linear-gradient(180deg, #eaf3ef 0%, #f4f1d9 58%, #efc7a1 58%, #e9b98b 100%);
+    }
+
+    .hero img {
+      display: block;
+      width: 100%;
+      height: auto;
+    }
+
+    .hero::after {
+      display: none;
     }
 
     .hero-bg {
@@ -67,18 +107,6 @@
         radial-gradient(circle at 88% 14%, rgba(255,255,255,.55) 0 8%, transparent 8.5%),
         radial-gradient(ellipse at 18% 82%, rgba(185,213,189,.75) 0 9%, transparent 9.5%),
         radial-gradient(ellipse at 82% 82%, rgba(239,199,161,.65) 0 12%, transparent 12.5%);
-    }
-
-    .hero::after {
-      content: '';
-      position: absolute;
-      z-index: 1;
-      inset: auto 0 0;
-      height: 42%;
-      background:
-        linear-gradient(145deg, transparent 0 42%, rgba(255,250,238,.18) 42% 43%, transparent 43%),
-        radial-gradient(ellipse at 50% 100%, rgba(255,248,222,.32), transparent 70%);
-      pointer-events: none;
     }
 
     .hero-content {
@@ -108,7 +136,10 @@
       letter-spacing: 0.12em;
     }
 
-    .pixel-hearts { color: var(--accent-blush); letter-spacing: 3px; }
+    .pixel-hearts {
+      color: var(--accent-blush);
+      letter-spacing: 3px;
+    }
 
     .hero-title {
       margin: 0;
@@ -136,9 +167,23 @@
       text-transform: uppercase;
     }
 
-    .hero-email { margin-top: 12px; font-size: 13px; }
-    .hero-email a { color: #8a6648; text-decoration: none; font-weight: 600; }
-    .hero-email a:hover { text-decoration: underline; color: #65472f; }
+    .hero-email {
+      margin-top: 12px;
+      font-size: 13px;
+    }
+
+    .hero-email a {
+      color: #8a6648;
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    .hero-email a:hover {
+      text-decoration: underline;
+      color: #65472f;
+    }
+
+    /* MAIN CONTENT */
 
     .content {
       max-width: 1500px;
@@ -162,7 +207,11 @@
       margin-bottom: 32px;
     }
 
-    .portfolio-section { margin: 0 0 44px; }
+    /* PORTFOLIO SECTIONS */
+
+    .portfolio-section {
+      margin: 0 0 44px;
+    }
 
     .portfolio-heading {
       font-family: 'Cormorant Garamond', serif;
@@ -179,6 +228,8 @@
       gap: 16px 18px;
     }
 
+    /* PROJECT CARDS */
+
     .work-item {
       min-height: 78px;
       display: flex;
@@ -190,7 +241,11 @@
       text-decoration: none;
       color: var(--text-main);
       box-shadow: 0 4px 12px rgba(130, 92, 58, 0.07);
-      transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+      transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease,
+        border-color 0.2s ease,
+        background 0.2s ease;
     }
 
     .work-item:hover {
@@ -221,87 +276,267 @@
       flex-grow: 1;
     }
 
-    .work-icon { font-size: 1.1rem; margin-left: 10px; opacity: 0.75; }
+    .work-icon {
+      font-size: 1.1rem;
+      margin-left: 10px;
+      opacity: 0.75;
+    }
 
-    @media (max-width: 900px) { .work-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+    /* TABLET RESPONSIVE DESIGN */
+
+    @media (max-width: 900px) {
+      .work-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    /* MOBILE RESPONSIVE DESIGN */
 
     @media (max-width: 640px) {
-      .content { padding: 28px 14px 44px; }
-      .work-grid { grid-template-columns: 1fr; }
-      .work-item { min-height: 68px; }
-      .hero-content { padding: 18px 20px 20px; }
+      .content {
+        padding: 28px 14px 44px;
+      }
+
+      .work-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .work-item {
+        min-height: 68px;
+      }
+
+      .hero-content {
+        padding: 18px 20px 20px;
+      }
     }
   </style>
 </head>
+
 <body>
+
+  <!-- RILAKKUMA HEADER IMAGE -->
+
   <header class="hero">
-    <div class="hero-bg" aria-hidden="true"></div>
-    <div class="hero-content">
-      <div class="hero-badge-header"><span>PORTFOLIO</span><span class="pixel-hearts" aria-hidden="true">♥♥♥</span></div>
-      <h1 class="hero-title">A.I. FOR DESIGNERS</h1>
-      <div class="hero-subtitle">Lindsy Kate</div>
-      <div class="hero-course">ART 3041 · Fall 2026</div>
-      <div class="hero-email"><a href="mailto:LINDSYKATE.ONG52@stu-mail.baruch.cuny.edu">LINDSYKATE.ONG52@stu-mail.baruch.cuny.edu</a></div>
-    </div>
+    <img
+      src="rilakkuma-header.png"
+      alt="A.I. FOR DESIGNERS — Lindsy Kate — ART 3041 · Fall 2026"
+    >
   </header>
 
   <main class="content">
+
     <h2 class="section-title">Course Work</h2>
-    <p class="section-subtitle">A studio portfolio exploring artificial intelligence &amp; visual design.</p>
+
+    <p class="section-subtitle">
+      A studio portfolio exploring artificial intelligence &amp; visual design.
+    </p>
+
+    <!-- STYLE CODEX -->
 
     <section class="portfolio-section">
+
       <h2 class="portfolio-heading">Style Codex</h2>
+
       <div class="work-grid">
-        <a href="#" class="work-item"><span class="work-num">01</span><span class="work-title">Custom Instructions</span></a>
-        <a href="#" class="work-item"><span class="work-num">02</span><span class="work-title">A Style Guide for Your AI</span></a>
-        <a href="#" class="work-item"><span class="work-num">03</span><span class="work-title">Open</span></a>
+
+        <a href="#" class="work-item">
+          <span class="work-num">01</span>
+          <span class="work-title">Custom Instructions</span>
+        </a>
+
+        <a href="#" class="work-item">
+          <span class="work-num">02</span>
+          <span class="work-title">A Style Guide for Your AI</span>
+        </a>
+
+        <a href="#" class="work-item">
+          <span class="work-num">03</span>
+          <span class="work-title">Open</span>
+        </a>
+
       </div>
+
     </section>
 
+    <!-- MISCELLANEOUS WORKS -->
+
     <section class="portfolio-section">
+
       <h2 class="portfolio-heading">Miscellaneous Works</h2>
+
       <div class="work-grid">
-        <a href="enoden_biblio_kiosk.html" class="work-item"><span class="work-num">01</span><span class="work-title">Design a ___</span></a>
-        <a href="a_visual_commute_story.html" class="work-item"><span class="work-num">02</span><span class="work-title">Commute Story</span></a>
-        <a href="#" class="work-item"><span class="work-num">03</span><span class="work-title">Experimental AI Interface</span></a>
-        <a href="chair_sequence_exploration.html" class="work-item"><span class="work-num">04</span><span class="work-title">Chair Sequence</span></a>
-        <a href="https://lkateong.github.io/lkateong-LINDSY-KATE-ONG-ART-3041/ai_movie_poster_transformation.html" class="work-item" target="_blank" rel="noopener noreferrer"><span class="work-num">05</span><span class="work-title">AI Movie Poster Transformation</span></a>
+
+        <a href="enoden_biblio_kiosk.html" class="work-item">
+          <span class="work-num">01</span>
+          <span class="work-title">Design a ___</span>
+        </a>
+
+        <a href="a_visual_commute_story.html" class="work-item">
+          <span class="work-num">02</span>
+          <span class="work-title">Commute Story</span>
+        </a>
+
+        <a href="#" class="work-item">
+          <span class="work-num">03</span>
+          <span class="work-title">Experimental AI Interface</span>
+        </a>
+
+        <a href="chair_sequence_exploration.html" class="work-item">
+          <span class="work-num">04</span>
+          <span class="work-title">Chair Sequence</span>
+        </a>
+
+        <a
+          href="https://lkateong.github.io/lkateong-LINDSY-KATE-ONG-ART-3041/ai_movie_poster_transformation.html"
+          class="work-item"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <span class="work-num">05</span>
+          <span class="work-title">AI Movie Poster Transformation</span>
+        </a>
+
       </div>
+
     </section>
 
-    <section class="portfolio-section">
-      <h2 class="portfolio-heading">Willi Kunz Style Poster Generator</h2>
-      <div class="work-grid">
-        <a href="Poster_Generator.html" class="work-item"><span class="work-num">01</span><span class="work-title">Poster Generator</span></a>
-        <a href="poster_variation_style.html" class="work-item"><span class="work-num">02</span><span class="work-title">Variations &amp; Style</span></a>
-        <a href="Live_City_Signal_Poster.html" class="work-item"><span class="work-num">03</span><span class="work-title">Live Data Air Quality Poster</span></a>
-        <a href="#" class="work-item"><span class="work-num">04</span><span class="work-title">Live Data Air Quality Variable Type Poster</span></a>
-      </div>
-    </section>
+    <!-- WILLI KUNZ STYLE POSTER GENERATOR -->
 
     <section class="portfolio-section">
-      <h2 class="portfolio-heading">2027 Baruch SSEP Mission Patch</h2>
+
+      <h2 class="portfolio-heading">
+        Willi Kunz Style Poster Generator
+      </h2>
+
       <div class="work-grid">
-        <a href="symbols_by_hand.html" class="work-item"><span class="work-num">01</span><span class="work-title">Initial Concept</span></a>
-        <a href="Patch_Generator_V1.html" class="work-item"><span class="work-num">02</span><span class="work-title">Patch Generator V1</span></a>
-        <a href="#" class="work-item"><span class="work-num">03</span><span class="work-title">Second Concept</span></a>
-        <a href="Patch_Generator_V2.html" class="work-item"><span class="work-num">04</span><span class="work-title">Patch Generator V2</span></a>
-        <a href="#" class="work-item"><span class="work-num">05</span><span class="work-title">Patch Generator V3</span></a>
-        <a href="final_patch_showcase.html" class="work-item"><span class="work-num">06</span><span class="work-title">Final Patch Showcase</span></a>
+
+        <a href="Poster_Generator.html" class="work-item">
+          <span class="work-num">01</span>
+          <span class="work-title">Poster Generator</span>
+        </a>
+
+        <a href="poster_variation_style.html" class="work-item">
+          <span class="work-num">02</span>
+          <span class="work-title">Variations &amp; Style</span>
+        </a>
+
+        <a href="Live_City_Signal_Poster.html" class="work-item">
+          <span class="work-num">03</span>
+          <span class="work-title">Live Data Air Quality Poster</span>
+        </a>
+
+        <a href="#" class="work-item">
+          <span class="work-num">04</span>
+          <span class="work-title">
+            Live Data Air Quality Variable Type Poster
+          </span>
+        </a>
+
       </div>
+
     </section>
 
+    <!-- BARUCH SSEP MISSION PATCH -->
+
     <section class="portfolio-section">
-      <h2 class="portfolio-heading">Become a Crea(i)tive Director</h2>
+
+      <h2 class="portfolio-heading">
+        2027 Baruch SSEP Mission Patch
+      </h2>
+
       <div class="work-grid">
-        <a href="#" class="work-item"><span class="work-num">01</span><span class="work-title">Creative Director Pt. 1: Style Guide</span></a>
-        <a href="#" class="work-item"><span class="work-num">02</span><span class="work-title">Creative Director Pt. 2: Logo + Dynamic Hero</span></a>
-        <a href="rilakkuma_prompt_builder.html" class="work-item"><span class="work-num">03</span><span class="work-title">Creative Director Pt. 3: Prompt Builder Tool</span></a>
-        <a href="Rilakkuma_Campaign.html" class="work-item"><span class="work-num">04</span><span class="work-title">Creative Director Pt. 4 &amp; 5: Print &amp; Digital Ads</span></a>
-        <a href="rilakkuma_patch_studio_embroidery.html" class="work-item"><span class="work-num">05</span><span class="work-title">Creative Director Pt. 6: Experimental Piece</span></a>
-        <a href="#" class="work-item"><span class="work-num">06</span><span class="work-title">Creative Director Pt. 7: Campaign Launch</span></a>
+
+        <a href="symbols_by_hand.html" class="work-item">
+          <span class="work-num">01</span>
+          <span class="work-title">Initial Concept</span>
+        </a>
+
+        <a href="Patch_Generator_V1.html" class="work-item">
+          <span class="work-num">02</span>
+          <span class="work-title">Patch Generator V1</span>
+        </a>
+
+        <a href="#" class="work-item">
+          <span class="work-num">03</span>
+          <span class="work-title">Second Concept</span>
+        </a>
+
+        <a href="Patch_Generator_V2.html" class="work-item">
+          <span class="work-num">04</span>
+          <span class="work-title">Patch Generator V2</span>
+        </a>
+
+        <a href="#" class="work-item">
+          <span class="work-num">05</span>
+          <span class="work-title">Patch Generator V3</span>
+        </a>
+
+        <a href="final_patch_showcase.html" class="work-item">
+          <span class="work-num">06</span>
+          <span class="work-title">Final Patch Showcase</span>
+        </a>
+
       </div>
+
     </section>
+
+    <!-- CREATIVE DIRECTOR -->
+
+    <section class="portfolio-section">
+
+      <h2 class="portfolio-heading">
+        Become a Crea(i)tive Director
+      </h2>
+
+      <div class="work-grid">
+
+        <a href="#" class="work-item">
+          <span class="work-num">01</span>
+          <span class="work-title">
+            Creative Director Pt. 1: Style Guide
+          </span>
+        </a>
+
+        <a href="#" class="work-item">
+          <span class="work-num">02</span>
+          <span class="work-title">
+            Creative Director Pt. 2: Logo + Dynamic Hero
+          </span>
+        </a>
+
+        <a href="rilakkuma_prompt_builder.html" class="work-item">
+          <span class="work-num">03</span>
+          <span class="work-title">
+            Creative Director Pt. 3: Prompt Builder Tool
+          </span>
+        </a>
+
+        <a href="Rilakkuma_Campaign.html" class="work-item">
+          <span class="work-num">04</span>
+          <span class="work-title">
+            Creative Director Pt. 4 &amp; 5: Print &amp; Digital Ads
+          </span>
+        </a>
+
+        <a href="rilakkuma_patch_studio_embroidery.html" class="work-item">
+          <span class="work-num">05</span>
+          <span class="work-title">
+            Creative Director Pt. 6: Experimental Piece
+          </span>
+        </a>
+
+        <a href="#" class="work-item">
+          <span class="work-num">06</span>
+          <span class="work-title">
+            Creative Director Pt. 7: Campaign Launch
+          </span>
+        </a>
+
+      </div>
+
+    </section>
+
   </main>
+
 </body>
 </html>
